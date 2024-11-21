@@ -18,7 +18,7 @@ import autoprefixer from 'autoprefixer';
 export default defineConfig({
   css: {
     preprocessorOptions: {
-      scss: {
+      sass: {
         api: 'modern-compiler'
       }
     },

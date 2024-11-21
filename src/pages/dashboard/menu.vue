@@ -1,14 +1,33 @@
 <template>
   <div class="grid grid-cols-12 gap-x-8">
     <Card class="col-span-6">
-      <template #title>Simple Card</template>
+      <template #title>
+        <h3 class="text-2xl font-semibold">Add Menu</h3>
+      </template>
       <template #content>
-        <p class="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam rem amet ipsa placeat porro odio dicta
-          ducimus a animi maiores itaque quaerat nulla ad, id recusandae nemo qui blanditiis? Quasi officia ipsam
-          incidunt enim. Fugit maxime dolorem corporis aut ratione molestias, neque voluptas dignissimos ex soluta unde
-          hic ipsum! Optio!
-        </p>
+        <Form>
+          <FormField>
+            <IconField>
+              <InputIcon class="pi pi-search" />
+              <InputText v-model="value1" placeholder="Search" fluid />
+            </IconField>
+          </FormField>
+
+          <FormField>
+            <IconField>
+              <InputIcon class="pi pi-search" />
+              <InputText v-model="value1" placeholder="Search" fluid />
+            </IconField>
+          </FormField>
+
+          <FormField>
+            <IconField>
+              <InputIcon class="pi pi-search" />
+              <InputText v-model="value1" placeholder="Search" fluid />
+            </IconField>
+          </FormField>
+
+        </Form>
       </template>
     </Card>
 

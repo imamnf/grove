@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
    *
    * @type {string}
    */
-  const url: string = <string>`${import.meta.env.VITE_API_BASE_URL}/auth`;
+  const url: string = `${import.meta.env.VITE_API_BASE_URL}/auth`;
   /**
    * The router instance.
    *

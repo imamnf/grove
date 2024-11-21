@@ -137,6 +137,8 @@ export const useMenuStore = defineStore('menu', () => {
         method: 'POST',
         body: payload
       });
+
+      getAllMenu()
     } catch (e: any) {
       console.error(e.data?.message);
       addState.error = true;

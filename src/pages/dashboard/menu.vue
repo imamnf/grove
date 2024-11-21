@@ -1,35 +1,6 @@
 <template>
   <div class="grid grid-cols-12 gap-x-8">
-    <Card class="col-span-6">
-      <template #title>
-        <h3 class="text-2xl font-semibold">Add Menu</h3>
-      </template>
-      <template #content>
-        <Form>
-          <FormField>
-            <IconField>
-              <InputIcon class="pi pi-search" />
-              <InputText v-model="value1" placeholder="Search" fluid />
-            </IconField>
-          </FormField>
-
-          <FormField>
-            <IconField>
-              <InputIcon class="pi pi-search" />
-              <InputText v-model="value1" placeholder="Search" fluid />
-            </IconField>
-          </FormField>
-
-          <FormField>
-            <IconField>
-              <InputIcon class="pi pi-search" />
-              <InputText v-model="value1" placeholder="Search" fluid />
-            </IconField>
-          </FormField>
-
-        </Form>
-      </template>
-    </Card>
+    <ViewsMenuAdd />
 
     <Card class="col-span-6">
       <template #title>Simple Card</template>

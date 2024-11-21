@@ -23,8 +23,10 @@ const resolver = ref(zodResolver(z.object({
 /**
  * Action
  */
-const onSubmitSignIn = (e: FormSubmitEvent) => {
-  authStore.signIn(<SignInPayload>e.values)
+const onSubmit = (e: FormSubmitEvent<SignInPayload>) => {
+  if (e.valid) {
+    authStore.signIn(e.values)
+  }
 }
 </script>
 
@@ -50,7 +52,7 @@ const onSubmitSignIn = (e: FormSubmitEvent) => {
     <div class="space-y-4">
       <h6 class="text-sm font-semibold text-slate-600">Or continue with email address</h6>
 
-      <Form class="space-y-6" :resolver @submit="onSubmitSignIn">
+      <Form class="space-y-6" :resolver @submit="onSubmit">
         <FormField v-slot="$field" name="email" class="flex flex-col gap-y-2">
           <IconField>
             <InputIcon class="pi pi-user" />

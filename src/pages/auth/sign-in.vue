@@ -1,33 +1,42 @@
 <script setup lang="ts">
-import type { FormSubmitEvent } from '@primevue/forms';
-import type { SignInPayload } from '@tpStr/auth.types';
-
-import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
 
 import { useAuthStore } from '@str/auth.store';
 
 // Store
 const authStore = useAuthStore();
-
 /********
  * Form *
  ********/
 /**
  * Schema
  */
-const resolver = ref(zodResolver(z.object({
-  email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' }),
-  password: z.string({ required_error: 'Password is required' }).min(6, { message: 'Password must be at least 6 characters' })
-})))
+const schema = toTypedSchema(
+  z.object({
+    email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' }),
+    password: z.string({ required_error: 'Password is required' }).min(6, { message: 'Password must be at least 6 characters' })
+  })
+)
+/**
+ * Validation
+ */
+const { errors, handleSubmit, resetForm } = useForm({ validationSchema: schema })
+/**
+ * Model
+ */
+const { value: Email } = useField<string>('email')
+const { value: Password } = useField<string>('password')
 /**
  * Action
  */
-const onSubmit = (e: FormSubmitEvent<SignInPayload>) => {
-  if (e.valid) {
-    authStore.signIn(e.values)
+const onSubmit = handleSubmit(async (values) => {
+  await authStore.signIn(values)
+
+  if (authStore.signInState.show) {
+    resetForm()
   }
-}
+})
 </script>
 
 <template>
@@ -52,36 +61,33 @@ const onSubmit = (e: FormSubmitEvent<SignInPayload>) => {
     <div class="space-y-4">
       <h6 class="text-sm font-semibold text-slate-600">Or continue with email address</h6>
 
-      <Form class="space-y-6" :resolver @submit="onSubmit">
-        <FormField v-slot="$field" name="email" class="flex flex-col gap-y-2">
+      <form class="space-y-6" @submit="onSubmit">
+        <div class="flex flex-col gap-y-2">
           <IconField>
             <InputIcon class="pi pi-user" />
-
-            <InputText variant="filled" placeholder="email@example.com" fluid />
+            <InputText v-model="Email" variant="filled" placeholder="email@example.com" fluid />
           </IconField>
 
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
-            {{ $field.error?.message }}
+          <Message v-if="errors.email" severity="error" size="small" variant="simple">
+            {{ errors.email }}
           </Message>
+        </div>
 
-        </FormField>
-
-        <FormField v-slot="$field" name="password" class="flex flex-col gap-y-2">
+        <div class="flex flex-col gap-y-2">
           <IconField>
             <InputIcon class="pi pi-key" />
-
-            <InputText name="password" type="password" variant="filled" placeholder="••••••••" fluid />
+            <InputText v-model="Password" type="password" variant="filled" placeholder="••••••••" fluid />
           </IconField>
 
-          <Message v-if="$field?.invalid" severity="error" size="small" variant="simple">
-            {{ $field.error?.message }}
+          <Message v-if="errors.password" severity="error" size="small" variant="simple">
+            {{ errors.password }}
           </Message>
-        </FormField>
+        </div>
 
         <Button type="submit" class="w-full" icon="pi pi-sign-in" rounded
           :label="authStore.signInState.loading ? 'Signing in...' : 'Sign in'" :loading="authStore.signInState.loading"
           :disabled="authStore.signInState.loading" />
-      </Form>
+      </form>
     </div>
   </div>
 </template>

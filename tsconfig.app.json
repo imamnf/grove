@@ -24,9 +24,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@conf/*": ["src/configs/*"],
-      "@fn/*": ["src/functions/*"],
-      "@msg/*": ["src/messages/*"],
+      "@views/*": ["src/components/views/*"],
       "@str/*": ["src/stores/*"],
       "@tp/*": ["src/types/*"],
       "@tpStr/*": ["src/types/stores/*"]

@@ -57,7 +57,7 @@ export default defineConfig({
       importMode: 'async'
     }),
     AutoImport({
-      imports: ['vue', '@vueuse/core', 'pinia', VueRouterAutoImports],
+      imports: ['vue', '@vueuse/core', 'pinia', 'vee-validate', VueRouterAutoImports],
       dirs: ['./src/lib', './src/composables', './src/utils'],
       vueTemplate: true
     })
@@ -65,9 +65,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@conf': fileURLToPath(new URL('./src/configs', import.meta.url)),
-      '@fn': fileURLToPath(new URL('./src/functions', import.meta.url)),
-      '@msg': fileURLToPath(new URL('./src/messages', import.meta.url)),
+      '@views': fileURLToPath(new URL('./src/components/views', import.meta.url)),
       '@str': fileURLToPath(new URL('./src/stores', import.meta.url)),
       '@tp': fileURLToPath(new URL('./src/types', import.meta.url)),
       '@tpStr': fileURLToPath(new URL('./src/types/stores', import.meta.url))

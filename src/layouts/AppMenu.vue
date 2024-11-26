@@ -7,7 +7,7 @@ const menuStore = useMenuStore()
 
 <template>
   <ul class="layout-menu">
-    <template v-for="(item, index) in menuStore.menuList" :key="index">
+    <template v-for="(item, index) in menuStore.menuListSidebar" :key="index">
       <AppMenuItem :index :item />
     </template>
   </ul>

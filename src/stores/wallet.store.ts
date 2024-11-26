@@ -1,28 +1,26 @@
 import type {
-  Payload,
-
-  // Get All & Single Wallet
+  // Get All Wallet
+  WalletsState,
+  WalletsResponse,
+  // Get Single Wallet
   WalletState,
   WalletResponse,
-
-  // Get Wallet Transaction
-  WalletTransactionState,
-  WalletTransactionResponse,
-
   // Add Wallet
-  AddWalletState,
-  AddWalletResponse,
-
-  // Change Status Wallet
-  ChangeStatusPayload,
-  ChangeStatusState,
-  ChangeStatusResponse,
-
-  // Rename Wallet
-  RenamePayload,
-  RenameState,
-  RenameResponse
-} from '@tp/stores/wallet.types';
+  AddPayload,
+  AddState,
+  AddResponse,
+  // Update Wallet Status
+  StatusPayload,
+  StatusState,
+  StatusResponse,
+  // Update Wallet
+  UpdatePayload,
+  UpdateState,
+  UpdateResponse,
+  // Get All Wallet Type
+  WalletTypesState,
+  WalletTypesResponse
+} from '@tpStr/wallet.types';
 
 export const useWalletStore = defineStore('wallet', () => {
   /**
@@ -31,22 +29,20 @@ export const useWalletStore = defineStore('wallet', () => {
    * @type {string}
    */
   const url: string = `${import.meta.env.VITE_API_BASE_URL}/wallets`;
-
   /************************
    *                      *
    * -> Get All Wallet <- *
    *                      *
    ************************/
-
   /**
    * The state of the all wallet store.
    *
-   * @property {WalletState['data']} data - The data of the store.
+   * @property {WalletsState['data']} data - The data of the store.
    * @property {boolean} error - The error state of the store.
    * @property {boolean} loading - The loading state of the store.
    * @property {boolean} show - The show state of the store.
    */
-  const state = reactive<WalletState>({
+  const state = reactive<WalletsState>({
     data: [],
     error: false,
     loading: false,
@@ -57,16 +53,18 @@ export const useWalletStore = defineStore('wallet', () => {
    *
    * @returns {Promise<void>}
    */
-  const getAllWallet = async (): Promise<void> => {
+  async function getAllWallet(): Promise<void> {
     state.data = [];
     state.loading = true;
     state.error = false;
     state.show = false;
 
     try {
-      const { data } = await $api<WalletResponse>(url, { method: 'POST' });
+      const { data } = await $api<WalletsResponse>(url, { method: 'POST' });
 
-      state.data = data;
+      if (data) {
+        state.data = data;
+      }
     } catch (error: any) {
       state.error = true;
     } finally {
@@ -74,13 +72,11 @@ export const useWalletStore = defineStore('wallet', () => {
       state.show = true;
     }
   };
-
   /***************************
    *                         *
    * -> Get Single Wallet <- *
    *                         *
    ***************************/
-
   /**
    * The state of the single wallet store.
    *
@@ -101,7 +97,7 @@ export const useWalletStore = defineStore('wallet', () => {
    * @param {string} slode - The slug and code of wallet
    * @returns {Promise<void>}
    */
-  const getSingleWallet = async (slode: string): Promise<void> => {
+  async function getSingleWallet(slode: string): Promise<void> {
     walletState.data = [];
     walletState.loading = true;
     walletState.error = false;
@@ -110,7 +106,9 @@ export const useWalletStore = defineStore('wallet', () => {
     try {
       const { data } = await $api<WalletResponse>(`${url}/${slode}`, { method: 'GET' });
 
-      walletState.data = data;
+      if (data) {
+        walletState.data = data;
+      }
     } catch (error: any) {
       walletState.error = true;
     } finally {
@@ -118,59 +116,11 @@ export const useWalletStore = defineStore('wallet', () => {
       walletState.show = true;
     }
   };
-
-  /********************************
-   *                              *
-   * -> Get Wallet Transaction <- *
-   *                              *
-   ********************************/
-
-  /**
-   * The state of the wallet transaction store.
-   *
-   * @property {WalletTransactionState['data']} data - The data of the store.
-   * @property {boolean} error - The error state of the store.
-   * @property {boolean} loading - The loading state of the store.
-   * @property {boolean} show - The show state of the store.
-   */
-  const walletTransactionState = reactive<WalletTransactionState>({
-    data: [],
-    error: false,
-    loading: false,
-    show: false
-  });
-  /**
-   * The function of the wallet transaction action.
-   *
-   * @param {string} slode - The slug and code of wallet
-   * @returns {Promise<void>}
-   */
-  const getWalletTransaction = async (slode: string): Promise<void> => {
-    walletTransactionState.data = [];
-    walletTransactionState.loading = true;
-    walletTransactionState.error = false;
-    walletTransactionState.show = false;
-
-    try {
-      const { data } = await $api<WalletTransactionResponse>(`${url}/${slode}/transaction`, {
-        method: 'POST'
-      });
-
-      walletTransactionState.data = data;
-    } catch (error: any) {
-      walletTransactionState.error = true;
-    } finally {
-      walletTransactionState.loading = false;
-      walletTransactionState.show = true;
-    }
-  };
-
   /********************
    *                  *
    * -> Add Wallet <- *
    *                  *
    ********************/
-
   /**
    * The state of the add wallet store.
    *
@@ -178,165 +128,149 @@ export const useWalletStore = defineStore('wallet', () => {
    * @property {boolean} loading - The loading state of the store.
    * @property {boolean} show - The show state of the store.
    */
-  const addState = reactive<AddWalletState>({
+  const addState = reactive<AddState>({
     error: false,
     loading: false,
     show: false
   });
   /**
-   * The function of the add wallet action.
+   * The function of the single wallet action.
    *
-   * @param {Payload} payload - The payload of adding wallet
    * @returns {Promise<void>}
    */
-  const addWallet = async (payload: Payload): Promise<void> => {
-    addState.error = false;
+  async function addWallet(payload: AddPayload): Promise<void> {
     addState.loading = true;
+    addState.error = false;
     addState.show = false;
-    /**
-     * Generate a formatted date string (YYMMDD) from the current date.
-     *
-     * @returns {string} The formatted date string.
-     */
-    const formattedDate = (() => {
-      const today = new Date();
-      const year = today.getFullYear().toString().slice(-2);
-      const month = (today.getMonth() + 1).toString().padStart(2, '0');
-      const day = today.getDate().toString().padStart(2, '0');
-
-      return year + month + day;
-    })();
-    /**
-     * Split the type code into two parts and generate
-     * a new code by concatenating the first part with
-     * the formatted date and the second part.
-     *
-     * @param {string} code - The type code.
-     * @returns {string} The new code.
-     */
-    const generateCode = (code: string): string => {
-      const type = code.split('_');
-      const codeArray = type[1].split('');
-
-      return codeArray[0] + formattedDate + codeArray[1];
-    };
-
-    const transformPayload = {
-      name: payload.name,
-      slug: useSlug(payload.name),
-      code: `${generateCode(payload.type_code)}-${useRandomString()}`,
-      wallet_type_id: Number(payload.type_code.split('_')[0])
-    };
 
     try {
-      const { message } = await $api<AddWalletResponse>(`${url}/add`, {
-        method: 'POST',
-        body: transformPayload
-      });
+      await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload });
 
-      if (message) {
-        addState.show = true;
-      }
-    } catch (error) {
+      getAllWallet()
+    } catch (error: any) {
       addState.error = true;
     } finally {
       addState.loading = false;
+      addState.show = true;
     }
   };
-
-  /******************************
-   *                            *
-   * -> Change Wallet Status <- *
-   *                            *
-   ******************************/
-
+  /*****************************
+  *                            *
+  * -> Update Wallet Status <- *
+  *                            *
+  ******************************/
   /**
-   * The state of the change wallet status store.
-   *
-   * @property {boolean} error - The error state of the store.
-   * @property {boolean} loading - The loading state of the store.
-   * @property {boolean} show - The show state of the store.
-   */
-  const changeStatusState = reactive<ChangeStatusState>({
+  * The state of the update wallet status store
+  *
+  * @property {boolean} error - The error state of the store.
+  * @property {boolean} loading - The loading state of the store.
+  * @property {boolean} show - The show state of the store.
+  */
+  const statusState = reactive<StatusState>({
     error: false,
     loading: false,
     show: false
-  });
+  })
   /**
-   * The function of the change status wallet action.
-   *
-   * @param {ChangeStatusPayload} payload - The payload of change status wallet
-   * @param {string} slode - The slug and code of wallet
-   * @returns {Promise<void>}
-   */
-  const changeStatusWallet = async (payload: ChangeStatusPayload, slode: string): Promise<void> => {
-    changeStatusState.error = false;
-    changeStatusState.loading = true;
-    changeStatusState.show = false;
+    * The function of the all wallet action.
+    *
+    * @returns {Promise<void>}
+    */
+  async function updateWalletStatus(payload: StatusPayload, slode: string): Promise<void> {
+    statusState.loading = true
+    statusState.error = false;
+    statusState.show = false;
 
     try {
-      const { message } = await $api<ChangeStatusResponse>(`${url}/status/${slode}`, {
-        method: 'POST',
-        body: payload
-      });
+      await $api<StatusResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
 
-      if (message) {
-        changeStatusState.show = true;
-
-        Promise.all([getSingleWallet(slode), getAllWallet()]);
-      }
+      getSingleWallet(slode)
     } catch (error) {
-      changeStatusState.error = true;
+      statusState.error = true
     } finally {
-      changeStatusState.loading = false;
+      statusState.loading = false
+      statusState.show = true
     }
-  };
-
+  }
   /***********************
    *                     *
-   * -> Rename Wallet <- *
+   * -> Update Wallet <- *
    *                     *
    ***********************/
-
   /**
-   * The state of the rename wallet store.
+  * The state of the update wallet store
+  *
+  * @property {boolean} error - The error state of the store.
+  * @property {boolean} loading - The loading state of the store.
+  * @property {boolean} show - The show state of the store.
+  */
+  const updateState = reactive<UpdateState>({
+    error: false,
+    loading: false,
+    show: false
+  })
+  /**
+    * The function of the all wallet action.
+    *
+    * @returns {Promise<void>}
+    */
+  async function updateWallet(payload: UpdatePayload, slode: string): Promise<void> {
+    updateState.loading = true
+    updateState.error = false;
+    updateState.show = false;
+
+    try {
+      await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+
+      getSingleWallet(slode)
+    } catch (error) {
+      updateState.error = true
+    } finally {
+      updateState.loading = false
+      updateState.show = true
+    }
+  }
+  /****************************
+  *                           *
+  * -> Get All Wallet Type <- *
+  *                           *
+  *****************************/
+  /**
+   * The state of the all wallet type store
    *
+   * @property {WalletsState['data']} data - The data of the store.
    * @property {boolean} error - The error state of the store.
    * @property {boolean} loading - The loading state of the store.
    * @property {boolean} show - The show state of the store.
    */
-  const renameState = reactive<RenameState>({
+  const typeState = reactive<WalletTypesState>({
+    data: [],
     error: false,
     loading: false,
     show: false
   });
   /**
-   * The function of the change status wallet action.
+   * The function of the all wallet type action.
    *
-   * @param {RenamePayload} payload - The payload of change status wallet
-   * @param {string} slode - The slug and code of wallet
    * @returns {Promise<void>}
    */
-  const renameWallet = async (payload: RenamePayload, slode: string): Promise<void> => {
-    renameState.error = false;
-    renameState.loading = true;
-    renameState.show = false;
+  async function getAllWalletType(): Promise<void> {
+    typeState.data = [];
+    typeState.loading = true;
+    typeState.error = false;
+    typeState.show = false;
 
     try {
-      const { message } = await $api<RenameResponse>(`${url}/rename/${slode}`, {
-        method: 'POST',
-        body: payload
-      });
+      const { data } = await $api<WalletTypesResponse>(`${url}/types`, { method: 'POST' });
 
-      if (message) {
-        renameState.show = true;
-
-        Promise.all([getSingleWallet(slode), getAllWallet()]);
+      if (data) {
+        typeState.data = data;
       }
-    } catch (error) {
-      renameState.error = true;
+    } catch (error: any) {
+      typeState.error = true;
     } finally {
-      renameState.loading = false;
+      typeState.loading = false;
+      typeState.show = true;
     }
   };
 
@@ -344,25 +278,20 @@ export const useWalletStore = defineStore('wallet', () => {
     // Get All Wallet
     state,
     getAllWallet,
-
     // Get Single Wallet
     walletState,
     getSingleWallet,
-
-    // Get Wallet Transaction
-    walletTransactionState,
-    getWalletTransaction,
-
     // Add Wallet
     addState,
     addWallet,
-
-    // Change Status Wallet
-    changeStatusState,
-    changeStatusWallet,
-
-    // Rename Wallet
-    renameState,
-    renameWallet
+    // Update Status Wallet
+    statusState,
+    updateWalletStatus,
+    // Update Wallet
+    updateState,
+    updateWallet,
+    // Get All Wallet Type
+    typeState,
+    getAllWalletType
   };
 });

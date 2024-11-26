@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import { useConfirm } from "primevue/useconfirm";
 import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod"
 
-
 import { useMenuStore } from '@str/menu.store';
 
+// Emits
+const emits = defineEmits<{ (e: 'update:isEditing', value: boolean): void }>()
 // Store
 const menuStore = useMenuStore()
 // State
 const id = useId()
+const confirm = useConfirm();
 /********
  * Form *
  ********/
@@ -17,13 +20,14 @@ const id = useId()
  */
 const schema = toTypedSchema(z.object({
   name: z.string({ required_error: 'Name is required' }),
+  slug: z.string(),
   to: z.string({ required_error: "Redirect is required" }),
   icon: z.string({ required_error: 'Icon is required' })
 }))
 /**
- * Validation 
+ * Validation
  */
-const { errors, handleSubmit, resetForm, values } = useForm({ validationSchema: schema })
+const { errors, handleSubmit, resetForm, setValues, values } = useForm({ validationSchema: schema })
 /**
  * Model
  */
@@ -36,14 +40,56 @@ const { value: Icon } = useField<string>('icon')
 const onSubmit = handleSubmit(async (values) => {
   const payload = {
     name: values.name,
-    to: '/dashboard/' + values.to,
+    to: values.to === 'dashboard' ? '/dashboard' : '/dashboard/' + values.to,
     icon: 'pi ' + values.icon
   }
 
-  await menuStore.addMenu(payload)
+  await menuStore.updateMenu(payload, values.slug)
 
   if (menuStore.addState.show) {
+    emits('update:isEditing', false)
+
     resetForm()
+  }
+})
+
+async function deleteMenu(slug: string) {
+
+  confirm.require({
+    message: 'Do you want to delete this menu?',
+    header: 'Danger Zone',
+    icon: 'pi pi-info-circle',
+    rejectLabel: 'Cancel',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger'
+    },
+    async accept() {
+      await menuStore.deleteMenu(slug)
+
+      if (menuStore.deleteState.show) {
+        emits('update:isEditing', false)
+
+        resetForm()
+      }
+    },
+
+  });
+}
+// Hooks
+watch(() => menuStore.menuSingleList, (newValue) => {
+  if (newValue) {
+    setValues({
+      name: newValue.name,
+      slug: newValue.slug,
+      to: newValue.to,
+      icon: newValue.icon,
+    })
   }
 })
 </script>
@@ -51,10 +97,14 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <Card class="col-span-6">
     <template #title>
-      <h3 class="text-2xl font-semibold">Add Menu</h3>
+      <div class="flex justify-between items-center">
+        <h3 class="text-2xl font-semibold">Edit Menu</h3>
+
+        <Button label="Add menu" variant="link" @click="emits('update:isEditing', false), resetForm()" />
+      </div>
     </template>
     <template #content>
-      <form class="space-y-6 grid" @submit="onSubmit">
+      <form class="space-y-6" @submit="onSubmit">
         <div class="flex flex-col gap-y-2">
           <label :for="id">Name</label>
 
@@ -73,7 +123,8 @@ const onSubmit = handleSubmit(async (values) => {
 
           <InputGroup :id>
             <InputGroupAddon>/dashboard/</InputGroupAddon>
-            <InputText v-model="Redirect" variant="filled" placeholder="product" fluid :invalid="!!errors.to" />
+            <InputText v-model="Redirect" variant="filled" placeholder="product" fluid
+              :disabled="values.to === 'dashboard'" :invalid="!!errors.to" />
           </InputGroup>
 
           <Message v-if="errors.to" severity="error" size="small" variant="simple">
@@ -112,9 +163,16 @@ const onSubmit = handleSubmit(async (values) => {
           </div>
         </div>
 
-        <Button type="submit" class="self-end" icon="pi pi-plus" rounded
-          :label="menuStore.addState.loading ? 'Adding...' : 'Add menu'" :loading="menuStore.addState.loading"
-          :disabled="menuStore.addState.loading" />
+        <div class="grid grid-cols-2 gap-x-4">
+          <Button type="button" icon="pi pi-trash" severity="danger" variant="outlined" rounded
+            :label="menuStore.deleteState.loading ? 'Deleting...' : 'Delete menu'"
+            :loading="menuStore.deleteState.loading" :disabled="menuStore.deleteState.loading"
+            @click="deleteMenu(<string>values.slug)" />
+
+          <Button type="submit" icon="pi pi-pencil" rounded
+            :label="menuStore.updateState.loading ? 'Editing...' : 'Edit menu'" :loading="menuStore.updateState.loading"
+            :disabled="menuStore.updateState.loading" />
+        </div>
       </form>
     </template>
   </Card>

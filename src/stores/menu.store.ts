@@ -1,27 +1,22 @@
 import type {
   Payload,
   Data,
-
   // Get All Menu
   MenusState,
   MenusResponse,
-
   // Get Single Menu
   MenuState,
   MenuResponse,
-
   // Add Menu
   AddState,
   AddResponse,
-
   // Update Menu
   UpdateState,
   UpdateResponse,
-
   // Delete Menu
   DeleteState,
   DeleteResponse
-} from '@tp/stores/menu.types';
+} from '@tpStr/menu.types';
 
 export const useMenuStore = defineStore('menu', () => {
   /**
@@ -30,12 +25,18 @@ export const useMenuStore = defineStore('menu', () => {
    * @type {string}
    */
   const url: string = `${import.meta.env.VITE_API_BASE_URL}/menus`;
-
+  /**********************
+   *                    *
+   * -> Get All Menu <- *
+   *                    *
+   **********************/
   /**
-   *  Get All Menu
+   * The state of the all menu store
+   *
+   * @property {boolean} error - The error state of the store
+   * @property {boolean} loading - The loading state of the store
+   * @property {boolean} show - The show state of the store
    */
-
-  // State
   const state = reactive<MenusState>({
     error: false,
     loading: false,
@@ -47,7 +48,7 @@ export const useMenuStore = defineStore('menu', () => {
       write: (v: Data[]) => JSON.stringify(v)
     }
   });
-  const menuList = computed(() => {
+  const menuListSidebar = computed(() => {
     return [
       {
         label: 'Home',
@@ -59,9 +60,20 @@ export const useMenuStore = defineStore('menu', () => {
       }
     ];
   });
-
-  // Action
-  const getAllMenu = async () => {
+  const menuList = computed(() => {
+    return menu.value.map((item) => ({
+      key: useId(),
+      label: item.name,
+      data: item.slug,
+      icon: item.icon
+    }))
+  })
+  /**
+   * The function of the all wallet action.
+   *
+   * @returns {Promise<void>}
+   */
+  async function getAllMenu(): Promise<void> {
     state.loading = true;
     state.error = false;
     state.show = false;
@@ -92,9 +104,22 @@ export const useMenuStore = defineStore('menu', () => {
     loading: false,
     show: false
   });
+  const menuSingleList = computed(() => {
+    return menuState.data?.map((item) => {
+      const toData = item.to.split('/').slice(1)
+      const iconData = item.icon.split(" ").slice(1)
+
+      return {
+        name: item.name,
+        slug: item.slug,
+        to: toData.length === 1 ? toData[0] : toData[1],
+        icon: iconData[0]
+      }
+    })[0]
+  })
 
   // Action
-  const getSingleMenu = async (slug: string) => {
+  async function getSingleMenu(slug: string) {
     menuState.data = [];
     menuState.loading = true;
     menuState.error = false;
@@ -127,7 +152,7 @@ export const useMenuStore = defineStore('menu', () => {
   });
 
   // Action
-  const addMenu = async (payload: Payload) => {
+  async function addMenu(payload: Payload) {
     addState.loading = true;
     addState.error = false;
     addState.show = false;
@@ -160,7 +185,7 @@ export const useMenuStore = defineStore('menu', () => {
   });
 
   // Action
-  const updateMenu = async (slug: string, payload: Payload) => {
+  async function updateMenu(payload: Payload, slug: string) {
     updateState.loading = true;
     updateState.error = false;
     updateState.show = false;
@@ -170,6 +195,8 @@ export const useMenuStore = defineStore('menu', () => {
         method: 'PATCH',
         body: payload
       });
+
+      getAllMenu()
     } catch (e: any) {
       console.error(e.data?.message);
       updateState.error = true;
@@ -191,13 +218,15 @@ export const useMenuStore = defineStore('menu', () => {
   });
 
   // Action
-  const deleteMenu = async (slug: string) => {
+  async function deleteMenu(slug: string) {
     deleteState.loading = true;
     deleteState.error = false;
     deleteState.show = false;
 
     try {
       await $api<DeleteResponse>(`${url}/${slug}`, { method: 'DELETE' });
+
+      getAllMenu()
     } catch (e: any) {
       console.error(e.data?.message);
       deleteState.error = true;
@@ -211,20 +240,18 @@ export const useMenuStore = defineStore('menu', () => {
     // Get All Menu
     state,
     getAllMenu,
+    menuListSidebar,
     menuList,
-
     // Get Single Menu
     menuState,
     getSingleMenu,
-
+    menuSingleList,
     // Add Menu
     addState,
     addMenu,
-
     // Update Menu
     updateState,
     updateMenu,
-
     // Delete Menu
     deleteState,
     deleteMenu

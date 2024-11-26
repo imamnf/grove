@@ -16,7 +16,11 @@ declare module 'vue' {
     AppTopbar: typeof import('./src/layouts/AppTopbar.vue')['default']
     Button: typeof import('primevue/button')['default']
     Card: typeof import('primevue/card')['default']
+    ConfirmDialog: typeof import('primevue/confirmdialog')['default']
+    copy: typeof import('./src/components/views/wallet/Add copy.vue')['default']
     DashboardAppBreadcrumb: typeof import('./src/layouts/dashboard/AppBreadcrumb.vue')['default']
+    DataView: typeof import('primevue/dataview')['default']
+    Dialog: typeof import('primevue/dialog')['default']
     Divider: typeof import('primevue/divider')['default']
     Form: typeof import('@primevue/forms/form')['default']
     FormField: typeof import('@primevue/forms/formfield')['default']
@@ -27,13 +31,21 @@ declare module 'vue' {
     InputIcon: typeof import('primevue/inputicon')['default']
     InputText: typeof import('primevue/inputtext')['default']
     Message: typeof import('primevue/message')['default']
+    RadioButton: typeof import('primevue/radiobutton')['default']
+    RadioButtonGroup: typeof import('primevue/radiobuttongroup')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Tag: typeof import('primevue/tag')['default']
     Toast: typeof import('primevue/toast')['default']
+    Tree: typeof import('primevue/tree')['default']
     ViewsMenuAdd: typeof import('./src/components/views/menu/Add.vue')['default']
+    ViewsMenuEdit: typeof import('./src/components/views/menu/Edit.vue')['default']
     ViewsMenuList: typeof import('./src/components/views/menu/List.vue')['default']
+    ViewsWalletAdd: typeof import('./src/components/views/wallet/Add.vue')['default']
+    ViewsWalletEdit: typeof import('./src/components/views/wallet/Edit.vue')['default']
   }
   export interface ComponentCustomProperties {
     StyleClass: typeof import('primevue/styleclass')['default']
+    Tooltip: typeof import('primevue/tooltip')['default']
   }
 }

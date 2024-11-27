@@ -38,7 +38,7 @@ const { errors, handleSubmit, resetForm } = useForm({
     schema.superRefine((val, ctx) => {
       const walletData = walletStore.state.data
 
-      if (walletData?.find(wallet => wallet.name === val.name) && walletData?.find(wallet => wallet.type.code === val.type.code)) {
+      if (walletData?.find(wallet => wallet.name === val.name && wallet.type.code === val.type.code)) {
         ctx.addIssue({
           code: 'custom',
           path: ['name', 'type'],
@@ -66,6 +66,7 @@ const onSubmit = handleSubmit(async (values) => {
 
   if (walletStore.addState.show) {
     resetForm()
+    visible.value = false
   }
 })
 </script>

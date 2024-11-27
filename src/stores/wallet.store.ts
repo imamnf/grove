@@ -220,9 +220,13 @@ export const useWalletStore = defineStore('wallet', () => {
     updateState.show = false;
 
     try {
-      await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+      const { data } = await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
 
-      getSingleWallet(slode)
+      if (data) {
+        const { slug, code } = data[0]
+
+        getSingleWallet(`${slug}_${code}`)
+      }
     } catch (error) {
       updateState.error = true
     } finally {

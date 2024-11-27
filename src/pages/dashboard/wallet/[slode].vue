@@ -4,7 +4,7 @@ import { useRoute } from "vue-router/auto"
 import { useWalletStore } from "@str/wallet.store"
 
 // Lazy Components
-const ViewsWalletEdit = defineAsyncComponent(() => import('@views/wallet/Edit.vue'))
+const LazyViewsWalletEdit = defineAsyncComponent(() => import('@views/wallet/Edit.vue'))
 // Store
 const walletStore = useWalletStore()
 // State
@@ -108,7 +108,7 @@ function onChangeWalletStatus(status: boolean) {
     </template>
   </div>
 
-  <ViewsWalletEdit :slode="slodeParams" v-model="isEditWallet" />
+  <LazyViewsWalletEdit :slode="slodeParams" v-model="isEditWallet" />
 </template>
 
 <route lang="json">{

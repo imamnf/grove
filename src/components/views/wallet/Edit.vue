@@ -24,12 +24,7 @@ onMounted(() => {
  */
 const schema = z.object({
   name: z.string({ required_error: 'Name is required' }),
-  type: z.object({
-    id: z.number(),
-    name: z.string(),
-    slug: z.string(),
-    code: z.string()
-  }, { required_error: 'Type is required' }),
+  type: z.string()
 })
 type Schema = z.infer<typeof schema>
 /**
@@ -38,12 +33,14 @@ type Schema = z.infer<typeof schema>
 const { errors, handleSubmit, resetForm, setValues } = useForm({
   validationSchema: toTypedSchema(
     schema.superRefine((val, ctx) => {
-      const walletData = walletStore.state.data
+      const walletsData = walletStore.state.data
+      const walletData = walletStore.walletState.data
 
-      if (walletData?.find(wallet => wallet.name === val.name) && walletData?.find(wallet => wallet.type.code === val.type.code)) {
+      if (walletsData?.filter(wallet => wallet.name !== walletData?.[0].name)
+        .find(wallet => wallet.name === val.name && wallet.code === val.type)) {
         ctx.addIssue({
           code: 'custom',
-          path: ['name', 'type'],
+          path: ['name'],
           message: 'Wallet already exist'
         })
       }
@@ -54,20 +51,19 @@ const { errors, handleSubmit, resetForm, setValues } = useForm({
  * Model
  */
 const { value: Name } = useField<Schema['name']>('name')
-const { value: Type } = useField<Schema['type']>('type')
 /**
  * Action
  */
 const onSubmit = handleSubmit(async (values) => {
   const payload = {
     name: values.name,
-    type_id: values.type.id
   }
 
   await walletStore.updateWallet(payload, props.slode)
 
   if (walletStore.updateState.show) {
     resetForm()
+    visible.value = false
   }
 })
 /**
@@ -77,12 +73,7 @@ watch([() => walletStore.walletState.data, () => walletStore.typeState.data], ([
   if (newWallet && newType) {
     setValues({
       name: newWallet[0]?.name,
-      type: {
-        id: newType?.find((item) => item.code === newWallet[0]?.type.code)?.id,
-        name: newWallet[0]?.type.name,
-        slug: newWallet[0]?.type.slug,
-        code: newWallet[0]?.type.code,
-      }
+      type: newWallet[0]?.type.code
     })
   }
 })
@@ -105,22 +96,9 @@ watch([() => walletStore.walletState.data, () => walletStore.typeState.data], ([
         </Message>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <div class="flex items-center gap-x-4">
-          <div v-for="type in walletStore.typeState.data" class="flex items-center gap-x-2" :key="id">
-            <RadioButton v-model="Type" :inputId="id" :value="type" :invalid="!!errors.type" />
-            <label :for="id">{{ type.name }}</label>
-          </div>
-        </div>
-
-        <Message v-if="errors.type" severity="error" size="small" variant="simple">
-          {{ errors.type }}
-        </Message>
-      </div>
-
-      <Button type="submit" class="self-end" icon="pi pi-plus" rounded
-        :label="walletStore.addState.loading ? 'Adding...' : 'Add wallet'" :loading="walletStore.addState.loading"
-        :disabled="walletStore.addState.loading" />
+      <Button type="submit" class="self-end" icon="pi pi-pencil" rounded
+        :label="walletStore.updateState.loading ? 'Updating...' : 'Update wallet'"
+        :loading="walletStore.updateState.loading" :disabled="walletStore.updateState.loading" />
     </form>
   </Dialog>
 </template>

@@ -137,11 +137,20 @@ interface StatusState extends State<null> { }
  */
 interface StatusResponse extends Response<null> { }
 /**
+ * Data of a update wallet
+ *
+ * @property {string} slug - Slug
+ * @property {string} code - Code
+ */
+interface UpdateData {
+  slug: string;
+  code: string;
+}
+/**
  * Data of update payload 
  */
 interface UpdatePayload {
   name: string
-  type_id: number
 }
 /**
  * The state of the update wallet store
@@ -156,7 +165,7 @@ interface UpdateState extends State<null> { }
  *
  * @property {string} message - The message of the response.
  */
-interface UpdateResponse extends Response<null> { }
+interface UpdateResponse extends Response<UpdateData[]> { }
 /**
  * Data of a single wallet
  *

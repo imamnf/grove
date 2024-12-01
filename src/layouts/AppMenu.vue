@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useMenuStore } from "@str/menu.store";
+import { useMenuStore } from '@str/menu.store'
 
 // Store
 const menuStore = useMenuStore()

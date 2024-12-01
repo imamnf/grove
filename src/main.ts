@@ -1,20 +1,21 @@
-import { createApp } from 'vue';
-import { definePreset } from '@primevue/themes';
+import { definePreset } from '@primevue/themes'
+import Aura from '@primevue/themes/aura'
 
-import App from './App.vue';
+import PrimeVue from 'primevue/config'
 
-import Aura from '@primevue/themes/aura';
-import PrimeVue from 'primevue/config';
-import ConfirmationService from 'primevue/confirmationservice';
-import ToastService from 'primevue/toastservice';
-import Tooltip from 'primevue/tooltip';
+import ConfirmationService from 'primevue/confirmationservice'
+import KeyFilter from 'primevue/keyfilter'
+import ToastService from 'primevue/toastservice'
+import Tooltip from 'primevue/tooltip'
+import { createApp } from 'vue'
+import App from './App.vue'
 
-import '@/assets/styles.scss';
-import '@/assets/tailwind.css';
+import '@/assets/styles.scss'
+import '@/assets/tailwind.css'
 
-const app = createApp(App);
+const app = createApp(App)
 
-registerPlugins(app);
+registerPlugins(app)
 
 const Noir = definePreset(Aura, {
   semantic: {
@@ -29,7 +30,7 @@ const Noir = definePreset(Aura, {
       700: '{zinc.700}',
       800: '{zinc.800}',
       900: '{zinc.900}',
-      950: '{zinc.950}'
+      950: '{zinc.950}',
     },
     colorScheme: {
       light: {
@@ -37,13 +38,13 @@ const Noir = definePreset(Aura, {
           color: '{zinc.950}',
           inverseColor: '#ffffff',
           hoverColor: '{zinc.900}',
-          activeColor: '{zinc.800}'
+          activeColor: '{zinc.800}',
         },
         highlight: {
           background: '{zinc.950}',
           focusBackground: '{zinc.700}',
           color: '#ffffff',
-          focusColor: '#ffffff'
+          focusColor: '#ffffff',
         },
         surface: {
           0: '#ffffff',
@@ -57,21 +58,21 @@ const Noir = definePreset(Aura, {
           700: '{zinc.700}',
           800: '{zinc.800}',
           900: '{zinc.900}',
-          950: '{zinc.950}'
-        }
+          950: '{zinc.950}',
+        },
       },
       dark: {
         primary: {
           color: '{zinc.50}',
           inverseColor: '{zinc.950}',
           hoverColor: '{zinc.100}',
-          activeColor: '{zinc.200}'
+          activeColor: '{zinc.200}',
         },
         highlight: {
           background: 'rgba(250, 250, 250, .16)',
           focusBackground: 'rgba(250, 250, 250, .24)',
           color: 'rgba(255,255,255,.87)',
-          focusColor: 'rgba(255,255,255,.87)'
+          focusColor: 'rgba(255,255,255,.87)',
         },
         surface: {
           0: '#ffffff',
@@ -85,24 +86,25 @@ const Noir = definePreset(Aura, {
           700: '{slate.700}',
           800: '{slate.800}',
           900: '{slate.900}',
-          950: '{slate.950}'
-        }
-      }
-    }
-  }
-});
+          950: '{slate.950}',
+        },
+      },
+    },
+  },
+})
 
 app.use(PrimeVue, {
   theme: {
     preset: Noir,
     options: {
-      darkModeSelector: '.app-dark'
-    }
-  }
-});
-app.use(ToastService);
-app.use(ConfirmationService);
+      darkModeSelector: '.app-dark',
+    },
+  },
+})
+app.use(ToastService)
+app.use(ConfirmationService)
 
-app.directive('tooltip', Tooltip);
+app.directive('keyfilter', KeyFilter)
+app.directive('tooltip', Tooltip)
 
-app.mount('#app');
+app.mount('#app')

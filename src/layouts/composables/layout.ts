@@ -3,8 +3,8 @@ const layoutConfig = reactive({
   primary: 'noir',
   surface: 'zinc',
   darkTheme: false,
-  menuMode: 'static'
-});
+  menuMode: 'static',
+})
 
 const layoutState = reactive({
   staticMenuDesktopInactive: false,
@@ -13,64 +13,65 @@ const layoutState = reactive({
   configSidebarVisible: false,
   staticMenuMobileActive: false,
   menuHoverActive: false,
-  activeMenuItem: null
-});
+  activeMenuItem: null,
+})
 
 export function useLayout() {
   const setPrimary = (value: string) => {
-    layoutConfig.primary = value;
-  };
+    layoutConfig.primary = value
+  }
 
   const setSurface = (value: string) => {
-    layoutConfig.surface = value;
-  };
+    layoutConfig.surface = value
+  }
 
   const setPreset = (value: string) => {
-    layoutConfig.preset = value;
-  };
+    layoutConfig.preset = value
+  }
 
   const setActiveMenuItem = (item: Record<string, any>) => {
-    layoutState.activeMenuItem = item.value || item;
-  };
+    layoutState.activeMenuItem = item.value || item
+  }
 
   const setMenuMode = (mode: string) => {
-    layoutConfig.menuMode = mode;
-  };
-
-  const toggleDarkMode = () => {
-    executeDarkModeToggle();
-  };
+    layoutConfig.menuMode = mode
+  }
 
   const executeDarkModeToggle = () => {
-    layoutConfig.darkTheme = !layoutConfig.darkTheme;
-    document.documentElement.classList.toggle('app-dark');
-  };
+    layoutConfig.darkTheme = !layoutConfig.darkTheme
+    document.documentElement.classList.toggle('app-dark')
+  }
+
+  const toggleDarkMode = () => {
+    executeDarkModeToggle()
+  }
 
   const onMenuToggle = () => {
     if (layoutConfig.menuMode === 'overlay') {
-      layoutState.overlayMenuActive = !layoutState.overlayMenuActive;
+      layoutState.overlayMenuActive = !layoutState.overlayMenuActive
     }
 
     if (window.innerWidth > 991) {
-      layoutState.staticMenuDesktopInactive = !layoutState.staticMenuDesktopInactive;
-    } else {
-      layoutState.staticMenuMobileActive = !layoutState.staticMenuMobileActive;
+      layoutState.staticMenuDesktopInactive = !layoutState.staticMenuDesktopInactive
     }
-  };
+    else {
+      layoutState.staticMenuMobileActive = !layoutState.staticMenuMobileActive
+    }
+  }
 
   const resetMenu = () => {
-    layoutState.overlayMenuActive = false;
-    layoutState.staticMenuMobileActive = false;
-    layoutState.menuHoverActive = false;
-  };
+    layoutState.overlayMenuActive = false
+    layoutState.staticMenuMobileActive = false
+    layoutState.menuHoverActive = false
+  }
 
-  const isSidebarActive = computed(() => layoutState.overlayMenuActive || layoutState.staticMenuMobileActive);
+  const isSidebarActive = computed(() => layoutState.overlayMenuActive || layoutState.staticMenuMobileActive)
 
-  const isDarkTheme = computed(() => layoutConfig.darkTheme);
+  const isDarkTheme = computed(() => layoutConfig.darkTheme)
 
-  const getPrimary = computed(() => layoutConfig.primary);
+  const getPrimary = computed(() => layoutConfig.primary)
 
-  const getSurface = computed(() => layoutConfig.surface);
+  const getSurface = computed(() => layoutConfig.surface)
 
   return {
     layoutConfig: readonly(layoutConfig),
@@ -86,6 +87,6 @@ export function useLayout() {
     setSurface,
     setPreset,
     resetMenu,
-    setMenuMode
-  };
+    setMenuMode,
+  }
 }

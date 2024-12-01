@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router/auto';
+import { useRoute } from 'vue-router/auto'
 
 // State
-const route = useRoute();
+const route = useRoute()
 
 const home = ref({
   icon: 'pi pi-home',
-  route: '/dashboard'
-});
+  route: '/dashboard',
+})
 
-const items = ref<{ label: string; route: string }[]>();
+const items = ref<{ label: string, route: string }[]>()
 
-watch(route.meta.crumb as { label: string; route: string }[], (newValue) => {
+watch(route.meta.crumb as { label: string, route: string }[], (newValue) => {
   if (newValue) {
-    items.value = newValue;
+    items.value = newValue
   }
-});
+})
 </script>
 
 <template>
@@ -23,7 +23,7 @@ watch(route.meta.crumb as { label: string; route: string }[], (newValue) => {
     :home="home"
     :model="items"
     :pt="{
-      root: '!bg-transparent !p-0'
+      root: '!bg-transparent !p-0',
     }"
   >
     <template #item="{ item, props }">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router/auto';
 import { useLayout } from '@/layouts/composables/layout';
+import { useRoute } from 'vue-router/auto';
 
 // State
 const route = useRoute();
@@ -60,7 +60,7 @@ const unbindOutsideClickListener = () => {
  * @param {Event} event - The event to check.
  * @returns {boolean} Whether the event is outside the sidebar and topbar.
  */
-const isOutsideClicked = (event: Event): boolean => {
+function isOutsideClicked(event: Event): boolean {
   const sidebarEl = document.querySelector('.layout-sidebar');
   const topbarEl = document.querySelector('.layout-menu-button');
 
@@ -69,7 +69,7 @@ const isOutsideClicked = (event: Event): boolean => {
       (sidebarEl.isSameNode(<Node>event.target) || sidebarEl.contains(<Node>event.target))) ||
     (topbarEl instanceof Node && (topbarEl.isSameNode(<Node>event.target) || topbarEl.contains(<Node>event.target)))
   );
-};
+}
 </script>
 
 <template>

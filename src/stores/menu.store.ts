@@ -1,22 +1,18 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import type {
-  Payload,
-  Data,
-  // Get All Menu
-  MenusState,
-  MenusResponse,
-  // Get Single Menu
-  MenuState,
-  MenuResponse,
-  // Add Menu
-  AddState,
   AddResponse,
-  // Update Menu
-  UpdateState,
-  UpdateResponse,
-  // Delete Menu
+  AddState,
+  Data,
+  DeleteResponse,
   DeleteState,
-  DeleteResponse
-} from '@tpStr/menu.types';
+  MenuResponse,
+  MenusResponse,
+  MenusState,
+  MenuState,
+  Payload,
+  UpdateResponse,
+  UpdateState,
+} from '@tpStr/menu.types'
 
 export const useMenuStore = defineStore('menu', () => {
   /**
@@ -24,7 +20,7 @@ export const useMenuStore = defineStore('menu', () => {
    *
    * @type {string}
    */
-  const url: string = `${import.meta.env.VITE_API_BASE_URL}/menus`;
+  const url: string = `${import.meta.env.VITE_API_BASE_URL}/menus`
   /**********************
    *                    *
    * -> Get All Menu <- *
@@ -40,32 +36,32 @@ export const useMenuStore = defineStore('menu', () => {
   const state = reactive<MenusState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   const menu = useLocalStorage('menu', null, {
     serializer: {
       read: (v: string) => (v ? JSON.parse(v) : null),
-      write: (v: Data[]) => JSON.stringify(v)
-    }
-  });
+      write: (v: Data[]) => JSON.stringify(v),
+    },
+  })
   const menuListSidebar = computed(() => {
     return [
       {
         label: 'Home',
-        items: menu.value.map((item) => ({
+        items: menu.value.map(item => ({
           label: item.name,
           icon: item.icon,
-          to: item.to
-        }))
-      }
-    ];
-  });
+          to: item.to,
+        })),
+      },
+    ]
+  })
   const menuList = computed(() => {
-    return menu.value.map((item) => ({
+    return menu.value.map(item => ({
       key: useId(),
       label: item.name,
       data: item.slug,
-      icon: item.icon
+      icon: item.icon,
     }))
   })
   /**
@@ -74,22 +70,26 @@ export const useMenuStore = defineStore('menu', () => {
    * @returns {Promise<void>}
    */
   async function getAllMenu(): Promise<void> {
-    state.loading = true;
-    state.error = false;
-    state.show = false;
+    state.loading = true
+    state.error = false
+    state.show = false
 
     try {
-      const { data } = await $api<MenusResponse>(url, { method: 'POST' });
+      const { status, data } = await $api<MenusResponse>(url, { method: 'POST' })
 
-      if (data) {
-        menu.value = data;
+      if (status === 200) {
+        menu.value = data.data
       }
-    } catch (e: any) {
-      console.error(e.data?.message);
-      state.error = true;
-    } finally {
-      state.loading = false;
-      state.show = true;
+      else {
+        state.error = true
+      }
+    }
+    catch (e: any) {
+      state.error = true
+    }
+    finally {
+      state.loading = false
+      state.show = true
     }
   };
 
@@ -102,41 +102,44 @@ export const useMenuStore = defineStore('menu', () => {
     data: [],
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   const menuSingleList = computed(() => {
     return menuState.data?.map((item) => {
       const toData = item.to.split('/').slice(1)
-      const iconData = item.icon.split(" ").slice(1)
+      const iconData = item.icon.split(' ').slice(1)
 
       return {
         name: item.name,
         slug: item.slug,
         to: toData.length === 1 ? toData[0] : toData[1],
-        icon: iconData[0]
+        icon: iconData[0],
       }
     })[0]
   })
 
   // Action
   async function getSingleMenu(slug: string) {
-    menuState.data = [];
-    menuState.loading = true;
-    menuState.error = false;
-    menuState.show = false;
+    menuState.data = []
+    menuState.loading = true
+    menuState.error = false
+    menuState.show = false
 
     try {
-      const { data } = await $api<MenuResponse>(`${url}/${slug}`, { method: 'GET' });
+      const { data, status } = await $api<MenuResponse>(`${url}/${slug}`, { method: 'GET' })
 
-      if (data) {
-        menuState.data = data;
+      if (status !== 200) {
+        menuState.error = true
       }
-    } catch (e: any) {
-      console.error(e.data?.message);
-      menuState.error = true;
-    } finally {
-      menuState.loading = false;
-      menuState.show = true;
+
+      menuState.data = data.data
+    }
+    catch (e: any) {
+      menuState.error = true
+    }
+    finally {
+      menuState.loading = false
+      menuState.show = true
     }
   };
 
@@ -148,28 +151,34 @@ export const useMenuStore = defineStore('menu', () => {
   const addState = reactive<AddState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   // Action
   async function addMenu(payload: Payload) {
-    addState.loading = true;
-    addState.error = false;
-    addState.show = false;
+    addState.loading = true
+    addState.error = false
+    addState.show = false
 
     try {
-      await $api<AddResponse>(`${url}/add`, {
+      const { status } = await $api<AddResponse>(`${url}/add`, {
         method: 'POST',
-        body: payload
-      });
+        body: payload,
+      })
 
-      getAllMenu()
-    } catch (e: any) {
-      console.error(e.data?.message);
-      addState.error = true;
-    } finally {
-      addState.loading = false;
-      addState.show = true;
+      if (status === 201) {
+        getAllMenu()
+      }
+      else {
+        addState.error = true
+      }
+    }
+    catch (e: any) {
+      addState.error = true
+    }
+    finally {
+      addState.loading = false
+      addState.show = true
     }
   };
 
@@ -181,28 +190,34 @@ export const useMenuStore = defineStore('menu', () => {
   const updateState = reactive<UpdateState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   // Action
   async function updateMenu(payload: Payload, slug: string) {
-    updateState.loading = true;
-    updateState.error = false;
-    updateState.show = false;
+    updateState.loading = true
+    updateState.error = false
+    updateState.show = false
 
     try {
-      await $api<UpdateResponse>(`${url}/${slug}`, {
+      const { status } = await $api<UpdateResponse>(`${url}/${slug}`, {
         method: 'PATCH',
-        body: payload
-      });
+        body: payload,
+      })
 
-      getAllMenu()
-    } catch (e: any) {
-      console.error(e.data?.message);
-      updateState.error = true;
-    } finally {
-      updateState.loading = false;
-      updateState.show = true;
+      if (status === 200) {
+        getAllMenu()
+      }
+      else {
+        updateState.error = true
+      }
+    }
+    catch (e: any) {
+      updateState.error = true
+    }
+    finally {
+      updateState.loading = false
+      updateState.show = true
     }
   };
 
@@ -214,25 +229,31 @@ export const useMenuStore = defineStore('menu', () => {
   const deleteState = reactive<DeleteState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   // Action
   async function deleteMenu(slug: string) {
-    deleteState.loading = true;
-    deleteState.error = false;
-    deleteState.show = false;
+    deleteState.loading = true
+    deleteState.error = false
+    deleteState.show = false
 
     try {
-      await $api<DeleteResponse>(`${url}/${slug}`, { method: 'DELETE' });
+      const { status } = await $api<DeleteResponse>(`${url}/${slug}`, { method: 'DELETE' })
 
-      getAllMenu()
-    } catch (e: any) {
-      console.error(e.data?.message);
-      deleteState.error = true;
-    } finally {
-      deleteState.loading = false;
-      deleteState.show = true;
+      if (status === 200) {
+        getAllMenu()
+      }
+      else {
+        deleteState.error = true
+      }
+    }
+    catch (e: any) {
+      deleteState.error = true
+    }
+    finally {
+      deleteState.loading = false
+      deleteState.show = true
     }
   };
 
@@ -254,6 +275,6 @@ export const useMenuStore = defineStore('menu', () => {
     updateMenu,
     // Delete Menu
     deleteState,
-    deleteMenu
-  };
-});
+    deleteMenu,
+  }
+})

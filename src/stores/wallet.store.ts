@@ -1,26 +1,23 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import type {
-  // Get All Wallet
-  WalletsState,
-  WalletsResponse,
-  // Get Single Wallet
-  WalletState,
-  WalletResponse,
-  // Add Wallet
   AddPayload,
-  AddState,
   AddResponse,
-  // Update Wallet Status
+  AddState,
   StatusPayload,
-  StatusState,
   StatusResponse,
-  // Update Wallet
+  StatusState,
   UpdatePayload,
-  UpdateState,
   UpdateResponse,
-  // Get All Wallet Type
+  UpdateState,
+  WalletResponse,
+  WalletsResponse,
+  WalletsState,
+  WalletState,
+  WalletTransactionsResponse,
+  WalletTransactionsState,
+  WalletTypesResponse,
   WalletTypesState,
-  WalletTypesResponse
-} from '@tpStr/wallet.types';
+} from '@tpStr/wallet.types'
 
 export const useWalletStore = defineStore('wallet', () => {
   /**
@@ -28,7 +25,7 @@ export const useWalletStore = defineStore('wallet', () => {
    *
    * @type {string}
    */
-  const url: string = `${import.meta.env.VITE_API_BASE_URL}/wallets`;
+  const url: string = `${import.meta.env.VITE_API_BASE_URL}/wallets`
   /************************
    *                      *
    * -> Get All Wallet <- *
@@ -46,30 +43,35 @@ export const useWalletStore = defineStore('wallet', () => {
     data: [],
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   /**
    * The function of the all wallet action.
    *
    * @returns {Promise<void>}
    */
   async function getAllWallet(): Promise<void> {
-    state.data = [];
-    state.loading = true;
-    state.error = false;
-    state.show = false;
+    state.data = []
+    state.loading = true
+    state.error = false
+    state.show = false
 
     try {
-      const { data } = await $api<WalletsResponse>(url, { method: 'POST' });
+      const { data, status } = await $api<WalletsResponse>(url, { method: 'POST' })
 
-      if (data) {
-        state.data = data;
+      if (status === 200) {
+        state.data = data.data
       }
-    } catch (error: any) {
-      state.error = true;
-    } finally {
-      state.loading = false;
-      state.show = true;
+      else {
+        state.error = true
+      }
+    }
+    catch (error: any) {
+      state.error = true
+    }
+    finally {
+      state.loading = false
+      state.show = true
     }
   };
   /***************************
@@ -89,8 +91,8 @@ export const useWalletStore = defineStore('wallet', () => {
     data: [],
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   /**
    * The function of the single wallet action.
    *
@@ -98,22 +100,27 @@ export const useWalletStore = defineStore('wallet', () => {
    * @returns {Promise<void>}
    */
   async function getSingleWallet(slode: string): Promise<void> {
-    walletState.data = [];
-    walletState.loading = true;
-    walletState.error = false;
-    walletState.show = false;
+    walletState.data = []
+    walletState.loading = true
+    walletState.error = false
+    walletState.show = false
 
     try {
-      const { data } = await $api<WalletResponse>(`${url}/${slode}`, { method: 'GET' });
+      const { data, status } = await $api<WalletResponse>(`${url}/${slode}`, { method: 'GET' })
 
-      if (data) {
-        walletState.data = data;
+      if (status === 200) {
+        walletState.data = data.data
       }
-    } catch (error: any) {
-      walletState.error = true;
-    } finally {
-      walletState.loading = false;
-      walletState.show = true;
+      else {
+        walletState.error = true
+      }
+    }
+    catch (error: any) {
+      walletState.error = true
+    }
+    finally {
+      walletState.loading = false
+      walletState.show = true
     }
   };
   /********************
@@ -131,27 +138,34 @@ export const useWalletStore = defineStore('wallet', () => {
   const addState = reactive<AddState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   /**
    * The function of the single wallet action.
    *
    * @returns {Promise<void>}
    */
   async function addWallet(payload: AddPayload): Promise<void> {
-    addState.loading = true;
-    addState.error = false;
-    addState.show = false;
+    addState.loading = true
+    addState.error = false
+    addState.show = false
 
     try {
-      await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload });
+      const { status } = await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload })
 
-      getAllWallet()
-    } catch (error: any) {
-      addState.error = true;
-    } finally {
-      addState.loading = false;
-      addState.show = true;
+      if (status === 201) {
+        getAllWallet()
+      }
+      else {
+        addState.error = true
+      }
+    }
+    catch (error: any) {
+      addState.error = true
+    }
+    finally {
+      addState.loading = false
+      addState.show = true
     }
   };
   /*****************************
@@ -160,34 +174,41 @@ export const useWalletStore = defineStore('wallet', () => {
   *                            *
   ******************************/
   /**
-  * The state of the update wallet status store
-  *
-  * @property {boolean} error - The error state of the store.
-  * @property {boolean} loading - The loading state of the store.
-  * @property {boolean} show - The show state of the store.
-  */
+   * The state of the update wallet status store
+   *
+   * @property {boolean} error - The error state of the store.
+   * @property {boolean} loading - The loading state of the store.
+   * @property {boolean} show - The show state of the store.
+   */
   const statusState = reactive<StatusState>({
     error: false,
     loading: false,
-    show: false
+    show: false,
   })
   /**
-    * The function of the all wallet action.
-    *
-    * @returns {Promise<void>}
-    */
+   * The function of the all wallet action.
+   *
+   * @returns {Promise<void>}
+   */
   async function updateWalletStatus(payload: StatusPayload, slode: string): Promise<void> {
     statusState.loading = true
-    statusState.error = false;
-    statusState.show = false;
+    statusState.error = false
+    statusState.show = false
 
     try {
-      await $api<StatusResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+      const { status } = await $api<StatusResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
 
-      getSingleWallet(slode)
-    } catch (error) {
+      if (status === 200) {
+        getSingleWallet(slode)
+      }
+      else {
+        statusState.error = true
+      }
+    }
+    catch (error) {
       statusState.error = true
-    } finally {
+    }
+    finally {
       statusState.loading = false
       statusState.show = true
     }
@@ -198,38 +219,43 @@ export const useWalletStore = defineStore('wallet', () => {
    *                     *
    ***********************/
   /**
-  * The state of the update wallet store
-  *
-  * @property {boolean} error - The error state of the store.
-  * @property {boolean} loading - The loading state of the store.
-  * @property {boolean} show - The show state of the store.
-  */
+   * The state of the update wallet store
+   *
+   * @property {boolean} error - The error state of the store.
+   * @property {boolean} loading - The loading state of the store.
+   * @property {boolean} show - The show state of the store.
+   */
   const updateState = reactive<UpdateState>({
     error: false,
     loading: false,
-    show: false
+    show: false,
   })
   /**
-    * The function of the all wallet action.
-    *
-    * @returns {Promise<void>}
-    */
+   * The function of the all wallet action.
+   *
+   * @returns {Promise<void>}
+   */
   async function updateWallet(payload: UpdatePayload, slode: string): Promise<void> {
     updateState.loading = true
-    updateState.error = false;
-    updateState.show = false;
+    updateState.error = false
+    updateState.show = false
 
     try {
-      const { data } = await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+      const { data, status } = await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
 
-      if (data) {
-        const { slug, code } = data[0]
+      if (status === 200 && data.data) {
+        const { slug, code } = data.data[0]
 
         getSingleWallet(`${slug}_${code}`)
       }
-    } catch (error) {
+      else {
+        updateState.error = true
+      }
+    }
+    catch (error) {
       updateState.error = true
-    } finally {
+    }
+    finally {
       updateState.loading = false
       updateState.show = true
     }
@@ -251,30 +277,77 @@ export const useWalletStore = defineStore('wallet', () => {
     data: [],
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   /**
    * The function of the all wallet type action.
    *
    * @returns {Promise<void>}
    */
   async function getAllWalletType(): Promise<void> {
-    typeState.data = [];
-    typeState.loading = true;
-    typeState.error = false;
-    typeState.show = false;
+    typeState.data = []
+    typeState.loading = true
+    typeState.error = false
+    typeState.show = false
 
     try {
-      const { data } = await $api<WalletTypesResponse>(`${url}/types`, { method: 'POST' });
+      const { data, status } = await $api<WalletTypesResponse>(`${url}/types`, { method: 'POST' })
 
-      if (data) {
-        typeState.data = data;
+      if (status === 200) {
+        typeState.data = data.data
       }
-    } catch (error: any) {
-      typeState.error = true;
-    } finally {
-      typeState.loading = false;
-      typeState.show = true;
+    }
+    catch (error: any) {
+      typeState.error = true
+    }
+    finally {
+      typeState.loading = false
+      typeState.show = true
+    }
+  };
+  /***********************************
+  *                                  *
+  * -> Get All Wallet Transaction <- *
+  *                                  *
+  ************************************/
+  /**
+   * The state of the all wallet transaction store
+   *
+   * @property {WalletsState['data']} data - The data of the store.
+   * @property {boolean} error - The error state of the store.
+   * @property {boolean} loading - The loading state of the store.
+   * @property {boolean} show - The show state of the store.
+   */
+  const transactionState = reactive<WalletTransactionsState>({
+    data: [],
+    error: false,
+    loading: false,
+    show: false,
+  })
+  /**
+   * The function of the all wallet transaction action.
+   *
+   * @returns {Promise<void>}
+   */
+  async function getAllWalletTransaction(slode: string): Promise<void> {
+    transactionState.data = []
+    transactionState.loading = true
+    transactionState.error = false
+    transactionState.show = false
+
+    try {
+      const { data, status } = await $api<WalletTransactionsResponse>(`${url}/${slode}/transactions`, { method: 'POST' })
+
+      if (status === 200) {
+        transactionState.data = data.data
+      }
+    }
+    catch (error: any) {
+      transactionState.error = true
+    }
+    finally {
+      transactionState.loading = false
+      transactionState.show = true
     }
   };
 
@@ -296,6 +369,9 @@ export const useWalletStore = defineStore('wallet', () => {
     updateWallet,
     // Get All Wallet Type
     typeState,
-    getAllWalletType
-  };
-});
+    getAllWalletType,
+    // Get All Wallet Transaction
+    transactionState,
+    getAllWalletTransaction,
+  }
+})

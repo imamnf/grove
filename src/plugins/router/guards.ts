@@ -1,4 +1,5 @@
-import type { Router } from 'vue-router/auto';
+import type { Router } from 'vue-router/auto'
+import { useAuthStore } from '@str/auth.store'
 
 /**
  * Sets up route guards for the given router.
@@ -11,24 +12,24 @@ import type { Router } from 'vue-router/auto';
  * - If the route requires authentication, the guard checks if the user is logged in.
  *   If not, the guard navigates to the sign-in page.
  */
-export const setupGuards = (router: Router) => {
+export function setupGuards(router: Router) {
   router.beforeEach((to) => {
+    const authStore = useAuthStore()
+
     if (to.meta.public) {
-      return;
+      return
     }
 
-    const isRegistrationSuccess = ref(localStorage.getItem('isRegistrationSuccess'));
+    const isRegistrationSuccess = ref(localStorage.getItem('isRegistrationSuccess'))
 
     if (to.meta.registrationSuccess && !isRegistrationSuccess) {
-      router.back();
+      router.back()
     }
-
-    const isLoggedIn = ref(localStorage.getItem('users'));
 
     if (to.meta.requiredAuth) {
-      if (!isLoggedIn) {
-        return '/sign-in';
+      if (!authStore.user) {
+        return '/sign-in'
       }
     }
-  });
-};
+  })
+}

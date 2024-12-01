@@ -8,10 +8,10 @@
  * @template T
  */
 export interface State<T extends Record<string, any> | null> {
-  data?: T;
-  error: boolean;
-  loading: boolean;
-  show: boolean;
+  data?: T
+  error: boolean
+  loading: boolean
+  show: boolean
 }
 
 /**
@@ -22,6 +22,9 @@ export interface State<T extends Record<string, any> | null> {
  * @template T
  */
 export interface Response<T extends Record<string, any> | null> {
-  data?: T;
-  message: string;
+  data: {
+    data?: T
+    message: string
+  }
+  status: number
 }

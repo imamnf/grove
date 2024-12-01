@@ -22,6 +22,7 @@ declare module 'vue-router/auto-routes' {
     'auth-sign-in': RouteRecordInfo<'auth-sign-in', '/auth/sign-in', Record<never, never>, Record<never, never>>,
     'dashboard': RouteRecordInfo<'dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
     'dashboard-menu': RouteRecordInfo<'dashboard-menu', '/dashboard/menu', Record<never, never>, Record<never, never>>,
+    'dashboard-transaction': RouteRecordInfo<'dashboard-transaction', '/dashboard/transaction', Record<never, never>, Record<never, never>>,
     'dashboard-wallet': RouteRecordInfo<'dashboard-wallet', '/dashboard/wallet', Record<never, never>, Record<never, never>>,
     'dashboard-wallet-slode': RouteRecordInfo<'dashboard-wallet-slode', '/dashboard/wallet/:slode', { slode: ParamValue<true> }, { slode: ParamValue<false> }>,
   }

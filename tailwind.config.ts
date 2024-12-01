@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
-import primeui from 'tailwindcss-primeui';
+import type { Config } from 'tailwindcss'
+import primeui from 'tailwindcss-primeui'
 
 export default {
   darkMode: ['selector', '[class*="app-dark"]'],
@@ -7,14 +7,14 @@ export default {
   plugins: [primeui],
   theme: {
     fontFamily: {
-      PlusJakartaSans: ['Plus Jakarta Sans', 'sans-serif']
+      PlusJakartaSans: ['Plus Jakarta Sans', 'sans-serif'],
     },
     screens: {
-      sm: '576px',
-      md: '768px',
-      lg: '992px',
-      xl: '1200px',
-      '2xl': '1920px'
-    }
-  }
-} satisfies Config;
+      'sm': '576px',
+      'md': '768px',
+      'lg': '992px',
+      'xl': '1200px',
+      '2xl': '1920px',
+    },
+  },
+} satisfies Config

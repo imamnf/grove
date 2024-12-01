@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod';
-import { z } from 'zod';
+import { useWalletStore } from '@str/wallet.store'
+import { toTypedSchema } from '@vee-validate/zod'
 
-import { useWalletStore } from "@str/wallet.store"
+import { z } from 'zod'
 
 // Model
 const visible = defineModel<boolean>()
@@ -26,7 +26,7 @@ const schema = z.object({
     id: z.number(),
     name: z.string(),
     slug: z.string(),
-    code: z.string()
+    code: z.string(),
   }, { required_error: 'Type is required' }),
 })
 type Schema = z.infer<typeof schema>
@@ -42,11 +42,11 @@ const { errors, handleSubmit, resetForm } = useForm({
         ctx.addIssue({
           code: 'custom',
           path: ['name', 'type'],
-          message: 'Wallet already exist'
+          message: 'Wallet already exist',
         })
       }
-    })
-  )
+    }),
+  ),
 })
 /**
  * Model
@@ -59,7 +59,7 @@ const { value: Type } = useField<Schema['type']>('type')
 const onSubmit = handleSubmit(async (values) => {
   const payload = {
     name: values.name,
-    type_id: values.type.id
+    type_id: values.type.id,
   }
 
   await walletStore.addWallet(payload)
@@ -72,15 +72,27 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <Dialog v-model:visible="visible" modal header="Add Wallet" :style="{ width: '30rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+  <Dialog
+    v-model:visible="visible"
+    modal
+    header="Add Wallet"
+    :style="{ width: '30rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
     <form class="space-y-6" @submit="onSubmit">
       <div class="flex flex-col gap-y-2">
         <label :for="id">Name</label>
 
         <IconField :id>
           <InputIcon class="pi pi-pencil" />
-          <InputText v-model="Name" variant="filled" placeholder="Wallet 2" fluid :invalid="!!errors.name" />
+
+          <InputText
+            v-model="Name"
+            variant="filled"
+            placeholder="Wallet 2"
+            fluid
+            :invalid="!!errors.name"
+          />
         </IconField>
 
         <Message v-if="errors.name" severity="error" size="small" variant="simple">
@@ -90,8 +102,18 @@ const onSubmit = handleSubmit(async (values) => {
 
       <div class="flex flex-col gap-2">
         <div class="flex items-center gap-x-4">
-          <div v-for="type in walletStore.typeState.data" class="flex items-center gap-x-2" :key="id">
-            <RadioButton v-model="Type" :inputId="id" :value="type" :invalid="!!errors.type" />
+          <div
+            v-for="type in walletStore.typeState.data"
+            :key="type.id"
+            class="flex items-center gap-x-2"
+          >
+            <RadioButton
+              v-model="Type"
+              :input-id="id"
+              :value="type"
+              :invalid="!!errors.type"
+            />
+
             <label :for="id">{{ type.name }}</label>
           </div>
         </div>
@@ -101,9 +123,15 @@ const onSubmit = handleSubmit(async (values) => {
         </Message>
       </div>
 
-      <Button type="submit" class="self-end" icon="pi pi-plus" rounded
-        :label="walletStore.addState.loading ? 'Adding...' : 'Add wallet'" :loading="walletStore.addState.loading"
-        :disabled="walletStore.addState.loading" />
+      <Button
+        type="submit"
+        class="self-end"
+        icon="pi pi-plus"
+        rounded
+        :label="walletStore.addState.loading ? 'Adding...' : 'Add wallet'"
+        :loading="walletStore.addState.loading"
+        :disabled="walletStore.addState.loading"
+      />
     </form>
   </Dialog>
 </template>

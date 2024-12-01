@@ -1,4 +1,4 @@
-import type { CategoryState, CategoryResponse } from '@tp/stores/category.types';
+import type { CategoryResponse, CategoryState } from '@tpStr/category.types'
 
 export const useCategoryStore = defineStore('category', () => {
   /**
@@ -6,7 +6,7 @@ export const useCategoryStore = defineStore('category', () => {
    *
    * @type {string}
    */
-  const url: string = `${import.meta.env.VITE_API_BASE_URL}/categories`;
+  const url: string = `${import.meta.env.VITE_API_BASE_URL}/categories`
 
   /**
    * Get All Category
@@ -17,30 +17,38 @@ export const useCategoryStore = defineStore('category', () => {
     data: [],
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   // Method
   const getAllCategory = async () => {
-    state.data = [];
-    state.error = false;
-    state.loading = true;
-    state.show = false;
+    state.data = []
+    state.error = false
+    state.loading = true
+    state.show = false
 
     try {
-      const { data } = await $api<CategoryResponse>(url, { method: 'POST' });
+      const { data, status } = await $api<CategoryResponse>(url, { method: 'POST' })
 
-      state.data = data;
-    } catch (error: any) {
-      state.error = true;
-    } finally {
-      state.loading = false;
-      state.show = true;
+      if (status === 200) {
+        state.data = data.data
+      }
+      else {
+        state.error = true
+      }
     }
-  };
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    catch (error: any) {
+      state.error = true
+    }
+    finally {
+      state.loading = false
+      state.show = true
+    }
+  }
 
   return {
     state,
-    getAllCategory
-  };
-});
+    getAllCategory,
+  }
+})

@@ -1,74 +1,89 @@
-import type { State, Response } from '@tp/index.types';
+import type { Response, State } from '@tp/index.types'
 
-/**
- * Data of the transaction.
- *
- * @property {number} id - ID
- * @property {string} name - Name
- * @property {string} slug - Slug
- * @property {string} code - Code
- * @property {string} description - Description
- * @property {number} amount - Amount
- * @property {string} category_name - Category Name
- * @property {string} category_slug - Category Slug
- * @property {string} status_name - Status Name
- * @property {string} status_slug - Status Slug
- * @property {string} status_icon - Status Icon
- * @property {string} addtime - Add time
- * @property {string} updtime - Update time
- */
+interface Basic {
+  name: string
+  slug: string
+  code: string
+}
+
+interface Category extends Basic { }
+interface Type extends Basic { }
+interface Wallet extends Basic { }
 interface Data {
-  id: number;
-  name: string;
-  slug: string;
-  code: string;
-  description: string;
-  amount: number;
-  category_name: string;
-  category_slug: string;
-  status_name: string;
-  status_slug: string;
-  status_icon: string;
-  addtime: string;
-  updtime: string;
+  name: string
+  slug: string
+  code: string
+  amount: number
+  description: string
+  category: Category
+  type: Type
+  wallet: Wallet
 }
 /**
- * Transaction payload.
- *
- * @property {string} name - Name
- * @property {string} description - Description
- * @property {string} amount - Amount
- * @property {date} date - Date
- * @property {number} status_id - Status ID
- * @property {number} transfer_id - Transfer ID
- * @property {number} category_id - Category ID
- * @property {number} wallet_id - Wallet ID
- */
-interface Payload {
-  id?: number;
-  name: string;
-  description: string;
-  amount: string;
-  date: Date;
-  status_id: number;
-  transfer_id: number;
-  category_id: number;
-  wallet_id: number;
-}
-
-/**
- * The state of the transaction store.
+ * The state of the transaction store
  *
  * @property {Data[]} data - The data of the store.
  * @property {boolean} error - The error state of the store.
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface TransactionState extends State<Data[]> {}
+interface TransactionsState extends State<Data[]> { }
 /**
  * The response of the transaction store.
  *
  * @property {Data[]} data - The data of the response.
  * @property {string} message - The message of the response.
  */
-interface TransactionResponse extends Response<Data[]> {}
+interface TransactionsResponse extends Response<Data[]> { }
+/**
+ * Payload of add transaction
+ */
+interface TransactionPayload {
+  name: string
+  amount: number
+  description: string
+  type_id: number
+  category_id: number
+  wallet_id: number
+}
+/**
+ * The state of the transaction type store
+ *
+ * @property {null} data - The data of the store.
+ * @property {boolean} error - The error state of the store.
+ * @property {boolean} loading - The loading state of the store.
+ * @property {boolean} show - The show state of the store.
+ */
+interface AddState extends State<null> { }
+/**
+ * The response of the transaction type store.
+ *
+ * @property {null} data - The data of the response.
+ * @property {string} message - The message of the response.
+ */
+interface AddResponse extends Response<null> { }
+/**
+ * Data of transaction type
+ */
+interface TypeData {
+  id: number
+  name: string
+  slug: 'revenue' | 'expense' | 'transfer'
+  icon: string
+}
+/**
+ * The state of the transaction type store
+ *
+ * @property {TypeData[]} data - The data of the store.
+ * @property {boolean} error - The error state of the store.
+ * @property {boolean} loading - The loading state of the store.
+ * @property {boolean} show - The show state of the store.
+ */
+interface TransactionTypesState extends State<TypeData[]> { }
+/**
+ * The response of the transaction type store.
+ *
+ * @property {TypeData[]} data - The data of the response.
+ * @property {string} message - The message of the response.
+ */
+interface TransactionTypesResponse extends Response<TypeData[]> { }

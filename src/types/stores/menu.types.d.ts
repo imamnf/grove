@@ -1,4 +1,4 @@
-import type { State, Response } from '@tp/index.types';
+import type { Response, State } from '@tp/index.types'
 
 /**
  * Data of a menu
@@ -9,10 +9,10 @@ import type { State, Response } from '@tp/index.types';
  * @property {string} icon - Icon
  */
 interface Data {
-  name: string;
-  slug: string;
-  to: string;
-  icon: string;
+  name: string
+  slug: string
+  to: string
+  icon: string
 }
 /**
  * Menu payload
@@ -22,9 +22,9 @@ interface Data {
  * @property {string} icon - Icon
  */
 interface Payload {
-  name: string;
-  to: string;
-  icon: string;
+  name: string
+  to: string
+  icon: string
 }
 /**
  * The state of the menu store.

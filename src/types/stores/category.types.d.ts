@@ -1,4 +1,4 @@
-import type { State, Response } from '@tp/index.types';
+import type { Response, State } from '@tp/index.types'
 
 /**
  * Data of a category.
@@ -11,12 +11,12 @@ import type { State, Response } from '@tp/index.types';
  * @property {string} updtime - Update time
  */
 interface Data {
-  id: number;
-  name: string;
-  slug: string;
-  status: boolean;
-  addtime: string;
-  updtime: string;
+  id: number
+  name: string
+  slug: string
+  status: boolean
+  addtime: string
+  updtime: string
 }
 /**
  * The state of the category store.
@@ -26,11 +26,11 @@ interface Data {
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface CategoryState extends State<Data[]> {}
+interface CategoryState extends State<Data[]> { }
 /**
  * The response of the category store.
  *
  * @property {Data[]} data - The data of the response.
  * @property {string} message - The message of the response.
  */
-interface CategoryResponse extends Response<Data[]> {}
+interface CategoryResponse extends Response<Data[]> { }

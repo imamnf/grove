@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { TreeNode } from 'primevue/treenode';
-
-import { useMenuStore } from "@str/menu.store"
+import type { TreeNode } from 'primevue/treenode'
+import { useMenuStore } from '@str/menu.store'
 
 // Props
 const props = defineProps<{
@@ -30,11 +29,18 @@ watch(props, (newValue) => {
 <template>
   <Card class="col-span-6">
     <template #title>
-      <h3 class="text-2xl font-semibold">List Menu</h3>
+      <h3 class="text-2xl font-semibold">
+        List Menu
+      </h3>
     </template>
     <template #content>
-      <Tree v-model:selectionKeys="selectedKey" selectionMode="single" class="w-full" :value="menuStore.menuList"
-        @nodeSelect="onNodeSelect" />
+      <Tree
+        v-model:selection-keys="selectedKey"
+        selection-mode="single"
+        class="w-full"
+        :value="menuStore.menuList"
+        @node-select="onNodeSelect"
+      />
     </template>
   </Card>
 </template>

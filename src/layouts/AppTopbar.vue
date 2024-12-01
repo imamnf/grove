@@ -1,29 +1,8 @@
 <script setup lang="ts">
-import { useLayout } from '@/layouts/composables/layout';
+import { useLayout } from '@/layouts/composables/layout'
 
-/**
- * Get layout composition
- * @param {() => void} onMenuToggle - Menu toggle method
- * @param {() => void} toggleDarkMode - Dark mode toggle method
- * @param {boolean} isDarkTheme - Is dark theme mode
- */
-const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
-
-/**
- * Data
- *
- * @property {boolean} isOpen - Is the add dialog open?
- */
-const add = reactive({
-  isOpen: false
-});
-
-/**
- * Open add transaction dialog
- */
-const openAddTransactionDialog = () => {
-  add.isOpen = true;
-};
+// Action
+const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout()
 </script>
 
 <template>
@@ -40,21 +19,22 @@ const openAddTransactionDialog = () => {
 
     <div class="layout-topbar-actions">
       <div class="layout-config-menu">
-        <Button label="Add New" icon="pi pi-plus" size="small" @click="openAddTransactionDialog" />
-
         <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
-          <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]" />
+          <i class="pi" :class="[{ 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]" />
         </button>
       </div>
 
-      <button class="layout-topbar-menu-button layout-topbar-action" v-styleclass="{
-        selector: '@next',
-        enterFromClass: 'hidden',
-        enterActiveClass: 'animate-scalein',
-        leaveToClass: 'hidden',
-        leaveActiveClass: 'animate-fadeout',
-        hideOnOutsideClick: true
-      }">
+      <button
+        v-styleclass="{
+          selector: '@next',
+          enterFromClass: 'hidden',
+          enterActiveClass: 'animate-scalein',
+          leaveToClass: 'hidden',
+          leaveActiveClass: 'animate-fadeout',
+          hideOnOutsideClick: true,
+        }"
+        class="layout-topbar-menu-button layout-topbar-action"
+      >
         <i class="pi pi-ellipsis-v" />
       </button>
 
@@ -69,6 +49,4 @@ const openAddTransactionDialog = () => {
       </div>
     </div>
   </div>
-
-  <AddTransactionDialog v-model:visible="add.isOpen" />
 </template>

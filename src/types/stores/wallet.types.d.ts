@@ -1,4 +1,4 @@
-import type { State, Response } from '@tp/index.types';
+import type { Response, State } from '@tp/index.types'
 
 /**
  * Data of a wallet
@@ -15,12 +15,12 @@ import type { State, Response } from '@tp/index.types';
  * @property {string} type.code - Type Code
  */
 interface Data {
-  id: number;
-  name: string;
-  slug: string;
-  code: string;
-  status: boolean;
-  balance: number;
+  id: number
+  name: string
+  slug: string
+  code: string
+  status: boolean
+  balance: number
   type: {
     name: string
     slug: string
@@ -62,21 +62,21 @@ interface WalletsResponse extends Response<Data[]> { }
  * @property {number} transaction.transfer - Transaction Transfer
  */
 interface WalletData {
-  id: number;
-  name: string;
-  slug: string;
-  code: string;
-  status: boolean;
-  balance: number;
+  id: number
+  name: string
+  slug: string
+  code: string
+  status: boolean
+  balance: number
   type: {
     name: string
     slug: string
     code: string
-  };
+  }
   transaction: {
-    revenue: number;
-    expense: number;
-    transfer: number;
+    revenue: number
+    expense: number
+    transfer: number
   }
 }
 /**
@@ -96,11 +96,11 @@ interface WalletState extends State<WalletData[]> { }
  */
 interface WalletResponse extends Response<WalletData[]> { }
 /**
- * Data of add payload 
+ * Data of add payload
  */
 interface AddPayload {
-  name: string;
-  type_id: number;
+  name: string
+  type_id: number
 }
 /**
  * The state of the add wallet store
@@ -117,7 +117,7 @@ interface AddState extends State<null> { }
  */
 interface AddResponse extends Response<null> { }
 /**
- * Data of status payload 
+ * Data of status payload
  */
 interface StatusPayload {
   status: boolean
@@ -143,11 +143,11 @@ interface StatusResponse extends Response<null> { }
  * @property {string} code - Code
  */
 interface UpdateData {
-  slug: string;
-  code: string;
+  slug: string
+  code: string
 }
 /**
- * Data of update payload 
+ * Data of update payload
  */
 interface UpdatePayload {
   name: string
@@ -167,7 +167,7 @@ interface UpdateState extends State<null> { }
  */
 interface UpdateResponse extends Response<UpdateData[]> { }
 /**
- * Data of a single wallet
+ * Data of a wallet type
  *
  * @property {number} id - ID
  * @property {string} name - Name
@@ -175,10 +175,10 @@ interface UpdateResponse extends Response<UpdateData[]> { }
  * @property {string} code - Code
  */
 interface WalletTypeData {
-  id: number;
-  name: string;
-  slug: string;
-  code: string;
+  id: number
+  name: string
+  slug: string
+  code: string
 }
 /**
  * The state of the wallet type store
@@ -190,9 +190,43 @@ interface WalletTypeData {
  */
 interface WalletTypesState extends State<WalletTypeData[]> { }
 /**
- * The response of the single wallet store.
+ * The response of the wallet type store.
  *
  * @property {WalletTypeData[]} data - The data of the response.
  * @property {string} message - The message of the response.
  */
 interface WalletTypesResponse extends Response<WalletTypeData[]> { }
+/**
+ * Data of a wallet transaction
+ *
+ * @property {number} id - ID
+ * @property {string} name - Name
+ * @property {string} slug - Slug
+ * @property {string} code - Code
+ * @property {string} amount - Amount
+ * @property {string} type - Type
+ */
+interface WalletTransactionData {
+  id: number
+  name: string
+  slug: string
+  code: string
+  amount: number
+  type: string
+}
+/**
+ * The state of the wallet transaction store
+ *
+ * @property {WalletTransactionData[]} data - The data of the store.
+ * @property {boolean} error - The error state of the store.
+ * @property {boolean} loading - The loading state of the store.
+ * @property {boolean} show - The show state of the store.
+ */
+interface WalletTransactionsState extends State<WalletTransactionData[]> { }
+/**
+ * The response of the wallet transaction store.
+ *
+ * @property {WalletTransactionData[]} data - The data of the response.
+ * @property {string} message - The message of the response.
+ */
+interface WalletTransactionsResponse extends Response<WalletTransactionData[]> { }

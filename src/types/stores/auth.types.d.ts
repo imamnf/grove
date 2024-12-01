@@ -1,4 +1,4 @@
-import { State, Response } from '@tp/index.types';
+import type { Response, State } from '@tp/index.types'
 
 /**
  * Sign up payload.
@@ -10,11 +10,11 @@ import { State, Response } from '@tp/index.types';
  * @property {string} phone - Phone
  */
 interface SignUpPayload {
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  phone: string;
+  email: string
+  password: string
+  first_name: string
+  last_name: string
+  phone: string
 }
 /**
  * The state of the sign up store.
@@ -23,13 +23,13 @@ interface SignUpPayload {
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface SignUpState extends State<null> {}
+interface SignUpState extends State<null> { }
 /**
  * The response of the sign up.
  *
  * @property {string} message - The message of the response.
  */
-interface SignUpResponse extends Response<null> {}
+interface SignUpResponse extends Response<null> { }
 
 /**
  * Data of a sign in.
@@ -44,14 +44,14 @@ interface SignUpResponse extends Response<null> {}
  */
 interface SignInData {
   user: {
-    email: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-  }[];
+    email: string
+    first_name: string
+    last_name: string
+    phone: string
+  }[]
   token: {
-    accessToken: string;
-  };
+    accessToken: string
+  }
 }
 
 /**
@@ -61,8 +61,8 @@ interface SignInData {
  * @property {string} password - Password
  */
 interface SignInPayload {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 /**
  * The state of the sign in store.
@@ -71,14 +71,14 @@ interface SignInPayload {
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface SignInState extends State<null> {}
+interface SignInState extends State<null> { }
 /**
  * The response of the sign in.
  *
  * @property {SignInData} data - The data of the response.
  * @property {string} message - The message of the response.
  */
-interface SignInResponse extends Response<SignInData> {}
+interface SignInResponse extends Response<SignInData> { }
 
 /**
  * Sign out payload.
@@ -86,7 +86,7 @@ interface SignInResponse extends Response<SignInData> {}
  * @property {string} email - Email
  */
 interface SignOutPayload {
-  email: string;
+  email: string
 }
 /**
  * The state of the sign out store.
@@ -95,13 +95,13 @@ interface SignOutPayload {
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface SignOutState extends State<null> {}
+interface SignOutState extends State<null> { }
 /**
  * The response of the sign out.
  *
  * @property {string} message - The message of the response.
  */
-interface SignOutResponse extends Response<null> {}
+interface SignOutResponse extends Response<null> { }
 
 /**
  * Forget password payload.
@@ -109,7 +109,7 @@ interface SignOutResponse extends Response<null> {}
  * @property {string} email - Email
  */
 interface ForgetPayload {
-  email: string;
+  email: string
 }
 /**
  * The state of the forget password store.
@@ -118,13 +118,13 @@ interface ForgetPayload {
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface ForgetState extends State<null> {}
+interface ForgetState extends State<null> { }
 /**
  * The response of the forget password.
  *
  * @property {string} message - The message of the response.
  */
-interface ForgetResponse extends Response<null> {}
+interface ForgetResponse extends Response<null> { }
 
 /**
  * Reset password payload.
@@ -134,9 +134,9 @@ interface ForgetResponse extends Response<null> {}
  * @property {string} new_password - New Password
  */
 interface ResetPayload {
-  email: string;
-  password: string;
-  new_password: string;
+  email: string
+  password: string
+  new_password: string
 }
 /**
  * The state of the reset password store.
@@ -145,10 +145,10 @@ interface ResetPayload {
  * @property {boolean} loading - The loading state of the store.
  * @property {boolean} show - The show state of the store.
  */
-interface ResetState extends State<null> {}
+interface ResetState extends State<null> { }
 /**
  * The response of the reset password.
  *
  * @property {string} message - The message of the response.
  */
-interface ResetResponse extends Response<null> {}
+interface ResetResponse extends Response<null> { }

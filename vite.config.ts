@@ -1,30 +1,22 @@
-import { fileURLToPath, URL } from 'node:url';
-import { defineConfig } from 'vite';
-
-import AutoImport from 'unplugin-auto-import/vite';
-import Components from 'unplugin-vue-components/vite';
-import Vue from '@vitejs/plugin-vue';
-import VueDevTools from 'vite-plugin-vue-devtools';
-import VueRouter from 'unplugin-vue-router/vite';
-
-import { ClientSideLayout } from 'vite-plugin-vue-layouts';
-import { PrimeVueResolver } from '@primevue/auto-import-resolver';
-import { VueRouterAutoImports, getPascalCaseRouteName } from 'unplugin-vue-router';
-
-import tailwind from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
+import { fileURLToPath, URL } from 'node:url'
+import { PrimeVueResolver } from '@primevue/auto-import-resolver'
+import Vue from '@vitejs/plugin-vue'
+import autoprefixer from 'autoprefixer'
+import tailwind from 'tailwindcss'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { getPascalCaseRouteName, VueRouterAutoImports } from 'unplugin-vue-router'
+import VueRouter from 'unplugin-vue-router/vite'
+import { defineConfig } from 'vite'
+import VueDevTools from 'vite-plugin-vue-devtools'
+import { ClientSideLayout } from 'vite-plugin-vue-layouts'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   css: {
-    preprocessorOptions: {
-      sass: {
-        api: 'modern-compiler'
-      }
-    },
     postcss: {
-      plugins: [tailwind(), autoprefixer()]
-    }
+      plugins: [tailwind(), autoprefixer()],
+    },
   },
   plugins: [
     VueRouter({
@@ -32,8 +24,8 @@ export default defineConfig({
         // Convert pascal case to kebab case
         return getPascalCaseRouteName(routeNode)
           .replace(/([a-z\d])([A-Z])/g, '$1-$2')
-          .toLowerCase();
-      }
+          .toLowerCase()
+      },
     }),
     Vue(),
     Components({
@@ -46,21 +38,21 @@ export default defineConfig({
         (componentName) => {
           // Auto import `VueApexCharts`
           if (componentName === 'VueApexCharts') {
-            return { name: 'default', from: 'vue3-apexcharts', as: 'VueApexCharts' };
+            return { name: 'default', from: 'vue3-apexcharts', as: 'VueApexCharts' }
           }
-        }
-      ]
+        },
+      ],
     }),
     VueDevTools(),
     ClientSideLayout({
       layoutDir: './src/layouts',
-      importMode: 'async'
+      importMode: 'async',
     }),
     AutoImport({
       imports: ['vue', '@vueuse/core', 'pinia', 'vee-validate', VueRouterAutoImports],
       dirs: ['./src/lib', './src/composables', './src/utils'],
-      vueTemplate: true
-    })
+      vueTemplate: true,
+    }),
   ],
   resolve: {
     alias: {
@@ -68,17 +60,17 @@ export default defineConfig({
       '@views': fileURLToPath(new URL('./src/components/views', import.meta.url)),
       '@str': fileURLToPath(new URL('./src/stores', import.meta.url)),
       '@tp': fileURLToPath(new URL('./src/types', import.meta.url)),
-      '@tpStr': fileURLToPath(new URL('./src/types/stores', import.meta.url))
-    }
+      '@tpStr': fileURLToPath(new URL('./src/types/stores', import.meta.url)),
+    },
   },
   build: {
-    chunkSizeWarningLimit: 5000
+    chunkSizeWarningLimit: 5000,
   },
   optimizeDeps: {
     entries: ['./src/**/*.vue'],
-    noDiscovery: true
+    noDiscovery: true,
   },
   server: {
-    port: 3000
-  }
-});
+    port: 3000,
+  },
+})

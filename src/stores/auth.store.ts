@@ -1,52 +1,47 @@
-import { type Router, useRouter } from 'vue-router/auto';
+/* eslint-disable unused-imports/no-unused-vars */
 import type {
-  // Sign Up
-  SignUpPayload,
-  SignUpState,
-  SignUpResponse,
-
-  // Sign In
+  ForgetPayload,
+  ForgetResponse,
+  ForgetState,
+  ResetPayload,
+  ResetResponse,
+  ResetState,
   SignInData,
   SignInPayload,
-  SignInState,
   SignInResponse,
-
-  // Sign Out
+  SignInState,
   SignOutPayload,
-  SignOutState,
   SignOutResponse,
+  SignOutState,
+  SignUpPayload,
+  SignUpResponse,
+  SignUpState,
+} from '@tpStr/auth.types'
+import { useToast } from 'primevue/usetoast'
+import { type Router, useRouter } from 'vue-router/auto'
 
-  // Forget Password
-  ForgetPayload,
-  ForgetState,
-  ForgetResponse,
-
-  // Reset Password
-  ResetPayload,
-  ResetState,
-  ResetResponse
-} from '@tp/stores/auth.types';
-
-import { useMenuStore } from './menu.store';
+import { useMenuStore } from './menu.store'
 
 export const useAuthStore = defineStore('auth', () => {
+  const toast = useToast()
+
   /**
    * The menu store instance.
    */
-  const menuStore = useMenuStore();
+  const menuStore = useMenuStore()
 
   /**
    * The base URL for all API requests.
    *
    * @type {string}
    */
-  const url: string = `${import.meta.env.VITE_API_BASE_URL}/auth`;
+  const url: string = `${import.meta.env.VITE_API_BASE_URL}/auth`
   /**
    * The router instance.
    *
    * @type {Router}
    */
-  const router: Router = useRouter();
+  const router: Router = useRouter()
 
   /*****************
    *               *
@@ -65,8 +60,8 @@ export const useAuthStore = defineStore('auth', () => {
   const signUpState = reactive<SignUpState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   /**
    * The function of the sign up action.
@@ -75,23 +70,27 @@ export const useAuthStore = defineStore('auth', () => {
    * @returns {Promise<void>}
    */
   const signUp = async (payload: SignUpPayload): Promise<void> => {
-    signUpState.error = false;
-    signUpState.loading = true;
-    signUpState.show = false;
+    signUpState.error = false
+    signUpState.loading = true
+    signUpState.show = false
 
     try {
-      const { message } = await $api<SignUpResponse>(`${url}/sign-up`, { method: 'POST', body: payload });
+      const { status } = await $api<SignUpResponse>(`${url}/sign-up`, { method: 'POST', body: payload })
 
-      if (message) {
-        signUpState.show = true;
+      if (status === 200) {
+        signUpState.show = true
       }
-    } catch (e: any) {
-      console.error(e);
-      signUpState.error = true;
-    } finally {
-      signUpState.loading = false;
+      else {
+        signUpState.error = true
+      }
     }
-  };
+    catch (e: any) {
+      signUpState.error = true
+    }
+    finally {
+      signUpState.loading = false
+    }
+  }
 
   /*****************
    *               *
@@ -110,15 +109,15 @@ export const useAuthStore = defineStore('auth', () => {
   const signInState = reactive<SignInState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
   const user = useLocalStorage('user', null, {
     serializer: {
       read: (v: string) => (v ? JSON.parse(v) : null),
-      write: (v: SignInData['user']) => JSON.stringify(v)
-    }
-  });
-  const accessToken = useSessionStorage<string | null>('accessToken', null);
+      write: (v: SignInData['user']) => JSON.stringify(v),
+    },
+  })
+  const accessToken = useSessionStorage<string | null>('accessToken', null)
 
   /**
    * The function of the sign in action.
@@ -127,32 +126,37 @@ export const useAuthStore = defineStore('auth', () => {
    * @returns {Promise<void>}
    */
   const signIn = async (payload: SignInPayload): Promise<void> => {
-    signInState.error = false;
-    signInState.loading = true;
-    signInState.show = false;
+    signInState.error = false
+    signInState.loading = true
+    signInState.show = false
 
     try {
-      const { data } = await $api<SignInResponse>(`${url}/sign-in`, { method: 'POST', body: payload });
+      const { data, status } = await $api<SignInResponse>(`${url}/sign-in`, { method: 'POST', body: payload })
 
-      accessToken.value = data?.token.accessToken;
-      user.value = data?.user;
+      if (status === 200) {
+        toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 })
 
-      if (data) {
-        router.push('/dashboard');
+        // Wait for toast to finish
+        await new Promise(resolve => setTimeout(resolve, 3000))
 
-        await nextTick(() => {
-          menuStore.getAllMenu();
-        });
+        accessToken.value = data.data?.token.accessToken
+        user.value = data.data?.user
+
+        await menuStore.getAllMenu()
+        await router.push('/dashboard')
       }
-    } catch (e: any) {
-      console.error(e);
-      signInState.error = true;
-    } finally {
-      signInState.loading = false;
-      signInState.show = true;
+      else {
+        signInState.error = true
+      }
     }
-  };
-
+    catch (e: any) {
+      signInState.error = true
+    }
+    finally {
+      signInState.loading = false
+      signInState.show = true
+    }
+  }
   /******************
    *                *
    * -> Sign Out <- *
@@ -168,8 +172,8 @@ export const useAuthStore = defineStore('auth', () => {
   const signOutState = reactive<SignOutState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   /**
    * The function of the sign out action.
@@ -178,22 +182,27 @@ export const useAuthStore = defineStore('auth', () => {
    * @returns {Promise<void>}
    */
   const signOut = async (payload: SignOutPayload): Promise<void> => {
-    signOutState.error = false;
-    signOutState.loading = true;
-    signOutState.show = false;
+    signOutState.error = false
+    signOutState.loading = true
+    signOutState.show = false
 
     try {
-      const { message } = await $api<SignOutResponse>(`${url}/sign-out`, { method: 'DELETE', body: payload });
+      const { status } = await $api<SignOutResponse>(`${url}/sign-out`, { method: 'DELETE', body: payload })
 
-      if (message) {
-        signOutState.show = true;
+      if (status === 200) {
+        signOutState.show = true
       }
-    } catch (error: any) {
-      signOutState.error = true;
-    } finally {
-      signOutState.loading = false;
+      else {
+        signOutState.error = true
+      }
     }
-  };
+    catch (error: any) {
+      signOutState.error = true
+    }
+    finally {
+      signOutState.loading = false
+    }
+  }
 
   /**
    *  Forget Password
@@ -203,26 +212,33 @@ export const useAuthStore = defineStore('auth', () => {
   const forgetState = reactive<ForgetState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   // Action
   const forgetPassword = async (payload: ForgetPayload) => {
-    forgetState.error = false;
-    forgetState.loading = true;
-    forgetState.show = false;
+    forgetState.error = false
+    forgetState.loading = true
+    forgetState.show = false
 
     try {
-      const { data } = await $api<ForgetResponse>(`${url}/forget-password`, { method: 'POST', body: payload });
-      forgetState.data = data;
-    } catch (error: any) {
-      console.log(error.data?.message);
-      forgetState.error = true;
-    } finally {
-      forgetState.loading = false;
-      forgetState.show = true;
+      const { status, data } = await $api<ForgetResponse>(`${url}/forget-password`, { method: 'POST', body: payload })
+
+      if (status === 200) {
+        forgetState.data = data.data
+      }
+      else {
+        forgetState.error = true
+      }
     }
-  };
+    catch (error: any) {
+      forgetState.error = true
+    }
+    finally {
+      forgetState.loading = false
+      forgetState.show = true
+    }
+  }
 
   /**
    *  Reset Password
@@ -232,26 +248,33 @@ export const useAuthStore = defineStore('auth', () => {
   const resetState = reactive<ResetState>({
     error: false,
     loading: false,
-    show: false
-  });
+    show: false,
+  })
 
   // Action
   const resetPassword = async (payload: ResetPayload) => {
-    resetState.error = false;
-    resetState.loading = true;
-    resetState.show = false;
+    resetState.error = false
+    resetState.loading = true
+    resetState.show = false
 
     try {
-      const { data } = await $api<ResetResponse>(`${url}/reset-password`, { method: 'PUT', body: payload });
-      resetState.data = data;
-    } catch (error: any) {
-      console.log(error.data?.message);
-      resetState.error = true;
-    } finally {
-      resetState.loading = false;
-      resetState.show = true;
+      const { data, status } = await $api<ResetResponse>(`${url}/reset-password`, { method: 'PUT', body: payload })
+
+      if (status === 200) {
+        resetState.data = data.data
+      }
+      else {
+        resetState.error = true
+      }
     }
-  };
+    catch (error: any) {
+      resetState.error = true
+    }
+    finally {
+      resetState.loading = false
+      resetState.show = true
+    }
+  }
 
   return {
     // Sign Up
@@ -274,6 +297,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Reset Password
     resetState,
-    resetPassword
-  };
-});
+    resetPassword,
+  }
+})

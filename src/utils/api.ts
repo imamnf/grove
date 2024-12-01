@@ -1,6 +1,6 @@
-import { type FetchOptions, ofetch } from 'ofetch';
+import { useAuthStore } from '@str/auth.store'
 
-import { useAuthStore } from '@str/auth.store';
+import { type FetchOptions, type FetchResponse, ofetch } from 'ofetch'
 
 export const $api = ofetch.create({
   /**
@@ -35,20 +35,30 @@ export const $api = ofetch.create({
    * @returns {Promise<void>}
    */
   async onRequest({ options }: { options: FetchOptions }): Promise<void> {
-    const authStore = useAuthStore();
+    const authStore = useAuthStore()
 
     options.headers = {
       ...options.headers,
-      Authorization: `Bearer ${authStore.accessToken}`
-    };
+      Authorization: `Bearer ${authStore.accessToken}`,
+    }
+  },
+
+  async onResponse({ response }: { response: FetchResponse<any> }): Promise<void> {
+    response._data = {
+      status: response.status,
+      data: response._data,
+    }
   },
 
   /**
    * Handles the response error.
    * Refreshes the token if the response status is 401 (Unauthorized).
-   * @param {Object} options - The options object.
+   * @param {object} options - The options object.
    * @param {Response} options.response - The response object.
    * @returns {Promise<void>}
    */
-  async onResponseError({}: { response: Response }): Promise<void> {}
-});
+
+  async onResponseError({ response }): Promise<void> {
+    console.log(response._data.data.message)
+  },
+})

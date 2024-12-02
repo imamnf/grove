@@ -16,9 +16,24 @@ const transactionStore = useTransactionStore()
 const walletStore = useWalletStore()
 // State
 const id = useId()
+const typeData = computed(() => {
+  if (!Array.isArray(transactionStore.typeState.data)) {
+    return []
+  }
+
+  const filteredData = [...transactionStore.typeState.data]
+
+  // eslint-disable-next-line ts/no-use-before-define
+  const walletFiltered = walletStore.walletState.data?.filter(wallet => wallet.id === values?.wallet)
+
+  if (walletFiltered?.[0]?.balance === 0) {
+    return filteredData.slice(0, 1)
+  }
+
+  return filteredData
+})
 // Action
 type TransactionType = 'revenue' | 'expense' | 'transfer'
-
 function checkSeverity(type: TransactionType): string {
   const severityMap: Record<TransactionType, string> = {
     revenue: 'text-emerald-500',
@@ -44,9 +59,7 @@ onBeforeMount(async () => {
 /********
  * Form *
  ********/
-/**
- * Schema
- */
+// Schema
 const schema = z.object({
   wallet: z.number({ required_error: 'Wallet is required' }),
   name: z.string({ required_error: 'Name is required' }),
@@ -57,24 +70,16 @@ const schema = z.object({
   description: z.string({ required_error: 'Description is required' }),
 })
 type Schema = z.infer<typeof schema>
-/**
- * Validation
- */
-const { errors, handleSubmit, resetForm } = useForm({
-  validationSchema: toTypedSchema(schema),
-})
-/**
- * Model
- */
+// Validation
+const { errors, handleSubmit, resetForm, values, setFieldValue } = useForm({ validationSchema: toTypedSchema(schema) })
+// Model
 const { value: Wallet } = useField<Schema['wallet']>('wallet')
 const { value: Name } = useField<Schema['name']>('name')
 const { value: Type } = useField<Schema['type']>('type')
 const { value: Amount } = useField<Schema['amount']>('amount')
 const { value: Category } = useField<Schema['category']>('category')
 const { value: Description } = useField<Schema['description']>('description')
-/**
- * Action
- */
+// Action
 const onSubmit = handleSubmit(async (values) => {
   const payload = {
     name: values.name,
@@ -90,6 +95,21 @@ const onSubmit = handleSubmit(async (values) => {
   if (transactionStore.addState.show) {
     resetForm()
     visible.value = false
+  }
+})
+// Hooks
+watch(() => values.wallet, async (newValue) => {
+  if (newValue) {
+    const wallet = walletStore.state.data?.filter(wallet => wallet.id === newValue)[0]
+    const slode = `${wallet?.slug}_${wallet?.code}`
+
+    await walletStore.getSingleWallet(slode)
+
+    resetForm({
+      values: {
+        wallet: values.wallet,
+      },
+    })
   }
 })
 </script>
@@ -112,9 +132,10 @@ const onSubmit = handleSubmit(async (values) => {
           option-label="name"
           option-value="id"
           placeholder="Select a wallet"
+          data-key="code"
           fluid
           :invalid="!!errors.wallet"
-          :options="walletStore.state.data"
+          :options="walletStore.activeWallet"
         />
 
         <Message v-if="errors.wallet" severity="error" size="small" variant="simple">
@@ -151,8 +172,9 @@ const onSubmit = handleSubmit(async (values) => {
           option-value="id"
           data-key="id"
           aria-labelledby="custom"
+          :allow-empty="false"
           :invalid="!!errors.type"
-          :options="transactionStore.typeState.data"
+          :options="typeData"
         >
           <template #option="{ option }: {option: TypeData}">
             <i :class="[`pi ${option.icon}`, checkSeverity(option.slug)]" />
@@ -170,8 +192,28 @@ const onSubmit = handleSubmit(async (values) => {
       <div class="flex flex-col gap-y-2">
         <label :for="id">Amount</label>
 
-        <IconField :id>
-          <InputIcon class="pi pi-pencil" />
+        <InputGroup v-if="values.type === 2 || values.type === 3" :id>
+          <IconField>
+            <InputIcon class="pi pi-dollar" />
+
+            <InputText
+              v-model="Amount"
+              v-keyfilter.num
+              variant="filled"
+              fluid
+              :placeholder="`Input amount - Max(${walletStore.walletState.data?.[0]?.balance})`"
+              :invalid="!!errors.amount"
+            />
+          </IconField>
+
+          <Button
+            :label="values.type === 2 ? 'Expense All' : 'Transfer All'"
+            @click="setFieldValue('amount', walletStore.walletState.data?.[0].balance.toString())"
+          />
+        </InputGroup>
+
+        <IconField v-else :id>
+          <InputIcon class="pi pi-dollar" />
 
           <InputText
             v-model="Amount"

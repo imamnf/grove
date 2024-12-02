@@ -51,6 +51,7 @@ declare module 'vue' {
     ViewsMenuEdit: typeof import('./src/components/views/menu/Edit.vue')['default']
     ViewsMenuList: typeof import('./src/components/views/menu/List.vue')['default']
     ViewsTransactionAdd: typeof import('./src/components/views/transaction/Add.vue')['default']
+    ViewsTransactionDetail: typeof import('./src/components/views/transaction/Detail.vue')['default']
     ViewsTransactionList: typeof import('./src/components/views/transaction/List.vue')['default']
     ViewsWalletAdd: typeof import('./src/components/views/wallet/Add.vue')['default']
     ViewsWalletEdit: typeof import('./src/components/views/wallet/Edit.vue')['default']

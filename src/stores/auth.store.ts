@@ -80,9 +80,6 @@ export const useAuthStore = defineStore('auth', () => {
       if (status === 200) {
         signUpState.show = true
       }
-      else {
-        signUpState.error = true
-      }
     }
     catch (e: any) {
       signUpState.error = true
@@ -145,9 +142,6 @@ export const useAuthStore = defineStore('auth', () => {
         await menuStore.getAllMenu()
         await router.push('/dashboard')
       }
-      else {
-        signInState.error = true
-      }
     }
     catch (e: any) {
       signInState.error = true
@@ -191,9 +185,6 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (status === 200) {
         signOutState.show = true
-      }
-      else {
-        signOutState.error = true
       }
     }
     catch (error: any) {

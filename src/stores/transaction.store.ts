@@ -53,6 +53,51 @@ export const useTransactionStore = defineStore('transaction', () => {
       state.show = true
     }
   };
+  /********************************
+   *                              *
+   * -> Get Single Transaction <- *
+   *                              *
+   ********************************/
+  /**
+   * The state of the single transaction store.
+   *
+   * @property {TransactionsState['data']} data - The data of the store.
+   * @property {boolean} error - The error state of the store.
+   * @property {boolean} loading - The loading state of the store.
+   * @property {boolean} show - The show state of the store.
+   */
+  const transactionState = reactive<TransactionsState>({
+    data: [],
+    error: false,
+    loading: false,
+    show: false,
+  })
+  /**
+   * The function of the single transaction action.
+   *
+   * @returns {Promise<void>}
+   */
+  async function getSingleTransaction(slode: string): Promise<void> {
+    transactionState.data = []
+    transactionState.loading = true
+    transactionState.error = false
+    transactionState.show = false
+
+    try {
+      const { data, status } = await $api<TransactionsResponse>(`${url}/${slode}`, { method: 'GET' })
+
+      if (status === 200) {
+        transactionState.data = data.data
+      }
+    }
+    catch (error: any) {
+      transactionState.error = true
+    }
+    finally {
+      transactionState.loading = false
+      transactionState.show = true
+    }
+  };
   /*************************
    *                       *
    * -> Add Transaction <- *
@@ -87,9 +132,6 @@ export const useTransactionStore = defineStore('transaction', () => {
       if (status === 201) {
         getAllTransaction()
       }
-      else {
-        addState.error = true
-      }
     }
     catch (error: any) {
       addState.error = true
@@ -99,7 +141,6 @@ export const useTransactionStore = defineStore('transaction', () => {
       addState.show = true
     }
   }
-
   /**********************************
    *                                *
    * -> Get All Transaction Type <- *
@@ -150,6 +191,9 @@ export const useTransactionStore = defineStore('transaction', () => {
     // Get All Transaction
     state,
     getAllTransaction,
+    // Get Single Transaction
+    transactionState,
+    getSingleTransaction,
     // Add Transaction
     addState,
     addTransaction,

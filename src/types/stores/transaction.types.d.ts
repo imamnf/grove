@@ -15,6 +15,7 @@ interface Data {
   code: string
   amount: number
   description: string
+  date: string
   category: Category
   type: Type
   wallet: Wallet

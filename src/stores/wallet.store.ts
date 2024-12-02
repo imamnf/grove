@@ -45,6 +45,7 @@ export const useWalletStore = defineStore('wallet', () => {
     loading: false,
     show: false,
   })
+  const activeWallet = computed(() => state.data?.filter(wallet => wallet.status !== false))
   /**
    * The function of the all wallet action.
    *
@@ -61,9 +62,6 @@ export const useWalletStore = defineStore('wallet', () => {
 
       if (status === 200) {
         state.data = data.data
-      }
-      else {
-        state.error = true
       }
     }
     catch (error: any) {
@@ -111,9 +109,6 @@ export const useWalletStore = defineStore('wallet', () => {
       if (status === 200) {
         walletState.data = data.data
       }
-      else {
-        walletState.error = true
-      }
     }
     catch (error: any) {
       walletState.error = true
@@ -156,9 +151,6 @@ export const useWalletStore = defineStore('wallet', () => {
       if (status === 201) {
         getAllWallet()
       }
-      else {
-        addState.error = true
-      }
     }
     catch (error: any) {
       addState.error = true
@@ -200,9 +192,6 @@ export const useWalletStore = defineStore('wallet', () => {
 
       if (status === 200) {
         getSingleWallet(slode)
-      }
-      else {
-        statusState.error = true
       }
     }
     catch (error) {
@@ -247,9 +236,6 @@ export const useWalletStore = defineStore('wallet', () => {
         const { slug, code } = data.data[0]
 
         getSingleWallet(`${slug}_${code}`)
-      }
-      else {
-        updateState.error = true
       }
     }
     catch (error) {
@@ -354,6 +340,7 @@ export const useWalletStore = defineStore('wallet', () => {
   return {
     // Get All Wallet
     state,
+    activeWallet,
     getAllWallet,
     // Get Single Wallet
     walletState,

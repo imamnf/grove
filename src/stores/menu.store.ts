@@ -80,9 +80,6 @@ export const useMenuStore = defineStore('menu', () => {
       if (status === 200) {
         menu.value = data.data
       }
-      else {
-        state.error = true
-      }
     }
     catch (e: any) {
       state.error = true
@@ -128,11 +125,9 @@ export const useMenuStore = defineStore('menu', () => {
     try {
       const { data, status } = await $api<MenuResponse>(`${url}/${slug}`, { method: 'GET' })
 
-      if (status !== 200) {
-        menuState.error = true
+      if (status === 200) {
+        menuState.data = data.data
       }
-
-      menuState.data = data.data
     }
     catch (e: any) {
       menuState.error = true
@@ -168,9 +163,6 @@ export const useMenuStore = defineStore('menu', () => {
 
       if (status === 201) {
         getAllMenu()
-      }
-      else {
-        addState.error = true
       }
     }
     catch (e: any) {
@@ -208,9 +200,6 @@ export const useMenuStore = defineStore('menu', () => {
       if (status === 200) {
         getAllMenu()
       }
-      else {
-        updateState.error = true
-      }
     }
     catch (e: any) {
       updateState.error = true
@@ -243,9 +232,6 @@ export const useMenuStore = defineStore('menu', () => {
 
       if (status === 200) {
         getAllMenu()
-      }
-      else {
-        deleteState.error = true
       }
     }
     catch (e: any) {

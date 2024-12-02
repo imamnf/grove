@@ -33,9 +33,6 @@ export const useCategoryStore = defineStore('category', () => {
       if (status === 200) {
         state.data = data.data
       }
-      else {
-        state.error = true
-      }
     }
     // eslint-disable-next-line unused-imports/no-unused-vars
     catch (error: any) {

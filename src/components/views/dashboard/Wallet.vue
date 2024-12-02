@@ -17,7 +17,7 @@ function getWalletSeverity(type: string) {
 </script>
 
 <template>
-  <div class="col-span-4">
+  <div class="col-span-6">
     <div class="card mb-0">
       <div class="flex justify-between">
         <div>

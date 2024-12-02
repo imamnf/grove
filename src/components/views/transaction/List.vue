@@ -27,6 +27,17 @@ function checkSeverity(type: TransactionType): string {
 onBeforeMount(() => {
   transactionStore.getAllTransaction()
 })
+/**
+ * Update Doalog
+ */
+// State
+const isOpenUpdate = ref(false)
+// Action
+async function openUpdateDialog(slode: string) {
+  isOpenUpdate.value = true
+
+  await transactionStore.getSingleTransaction(slode)
+}
 </script>
 
 <template>
@@ -35,7 +46,6 @@ onBeforeMount(() => {
       state-storage="session"
       state-key="dt-state-wallet-transaction-session"
       filter-display="menu"
-      data-key="id"
       class="w-full"
       paginator
       :rows="10"
@@ -89,6 +99,14 @@ onBeforeMount(() => {
         </template>
       </Column>
 
+      <Column field="date" header="Date" sortable style="width: 25%" />
+
+      <Column header="Action" style="width: 25%">
+        <template #body="{ data }: {data: Data}">
+          <Button icon="pi pi-pencil" rounded @click="openUpdateDialog(`${data.slug}_${data.code}`)" />
+        </template>
+      </Column>
+
       <template #empty>
         <div class="text-center">
           No transaction found.
@@ -96,4 +114,6 @@ onBeforeMount(() => {
       </template>
     </DataTable>
   </div>
+
+  <ViewsTransactionDetail v-model="isOpenUpdate" />
 </template>

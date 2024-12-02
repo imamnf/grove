@@ -1,5 +1,9 @@
 <template>
-  <div>this is index</div>
+  <div>
+    <RouterLink to="/sign-in">
+      Sign in
+    </RouterLink>
+  </div>
 </template>
 
 <route lang="json">

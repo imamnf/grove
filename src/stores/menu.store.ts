@@ -14,7 +14,10 @@ import type {
   UpdateState,
 } from '@tpStr/menu.types'
 
+import { useToast } from 'primevue/usetoast'
+
 export const useMenuStore = defineStore('menu', () => {
+  const toast = useToast()
   /**
    * The base URL for all API requests.
    *
@@ -156,12 +159,19 @@ export const useMenuStore = defineStore('menu', () => {
     addState.show = false
 
     try {
-      const { status } = await $api<AddResponse>(`${url}/add`, {
+      const { data, status } = await $api<AddResponse>(`${url}/add`, {
         method: 'POST',
         body: payload,
       })
 
       if (status === 201) {
+        toast.add({
+          severity: 'success',
+          summary: 'Add Menu Successful!',
+          detail: data.message,
+          life: 3000,
+        })
+
         getAllMenu()
       }
     }
@@ -192,12 +202,19 @@ export const useMenuStore = defineStore('menu', () => {
     updateState.show = false
 
     try {
-      const { status } = await $api<UpdateResponse>(`${url}/${slug}`, {
+      const { data, status } = await $api<UpdateResponse>(`${url}/${slug}`, {
         method: 'PATCH',
         body: payload,
       })
 
       if (status === 200) {
+        toast.add({
+          severity: 'info',
+          summary: 'Update Menu Successful!',
+          detail: data.message,
+          life: 3000,
+        })
+
         getAllMenu()
       }
     }
@@ -228,9 +245,16 @@ export const useMenuStore = defineStore('menu', () => {
     deleteState.show = false
 
     try {
-      const { status } = await $api<DeleteResponse>(`${url}/${slug}`, { method: 'DELETE' })
+      const { data, status } = await $api<DeleteResponse>(`${url}/${slug}`, { method: 'DELETE' })
 
       if (status === 200) {
+        toast.add({
+          severity: 'error',
+          summary: 'Delete Menu Successful!',
+          detail: data.message,
+          life: 3000,
+        })
+
         getAllMenu()
       }
     }

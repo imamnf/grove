@@ -213,6 +213,7 @@ interface WalletTransactionData {
   code: string
   amount: number
   type: string
+  date: string
 }
 /**
  * The state of the wallet transaction store

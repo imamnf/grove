@@ -48,7 +48,7 @@ interface TransactionPayload {
   wallet_id: number
 }
 /**
- * The state of the transaction type store
+ * The state of the add transaction store
  *
  * @property {null} data - The data of the store.
  * @property {boolean} error - The error state of the store.
@@ -57,12 +57,28 @@ interface TransactionPayload {
  */
 interface AddState extends State<null> { }
 /**
- * The response of the transaction type store.
+ * The response of the add transaction store.
  *
  * @property {null} data - The data of the response.
  * @property {string} message - The message of the response.
  */
 interface AddResponse extends Response<null> { }
+/**
+ * The state of the delete transaction store
+ *
+ * @property {null} data - The data of the store.
+ * @property {boolean} error - The error state of the store.
+ * @property {boolean} loading - The loading state of the store.
+ * @property {boolean} show - The show state of the store.
+ */
+interface DeleteState extends State<null> { }
+/**
+ * The response of the delete transaction store.
+ *
+ * @property {null} data - The data of the response.
+ * @property {string} message - The message of the response.
+ */
+interface DeleteResponse extends Response<null> { }
 /**
  * Data of transaction type
  */

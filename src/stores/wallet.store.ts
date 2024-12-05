@@ -19,7 +19,10 @@ import type {
   WalletTypesState,
 } from '@tpStr/wallet.types'
 
+import { useToast } from 'primevue/usetoast'
+
 export const useWalletStore = defineStore('wallet', () => {
+  const toast = useToast()
   /**
    * The base URL for all API requests.
    *
@@ -136,7 +139,7 @@ export const useWalletStore = defineStore('wallet', () => {
     show: false,
   })
   /**
-   * The function of the single wallet action.
+   * The function of the add wallet action.
    *
    * @returns {Promise<void>}
    */
@@ -146,9 +149,16 @@ export const useWalletStore = defineStore('wallet', () => {
     addState.show = false
 
     try {
-      const { status } = await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload })
+      const { data, status } = await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload })
 
       if (status === 201) {
+        toast.add({
+          severity: 'success',
+          summary: 'Add Wallet Successful!',
+          detail: data.message,
+          life: 3000,
+        })
+
         getAllWallet()
       }
     }
@@ -178,7 +188,7 @@ export const useWalletStore = defineStore('wallet', () => {
     show: false,
   })
   /**
-   * The function of the all wallet action.
+   * The function of the update wallet status action.
    *
    * @returns {Promise<void>}
    */
@@ -188,9 +198,16 @@ export const useWalletStore = defineStore('wallet', () => {
     statusState.show = false
 
     try {
-      const { status } = await $api<StatusResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+      const { data, status } = await $api<StatusResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
 
       if (status === 200) {
+        toast.add({
+          severity: 'info',
+          summary: 'Update Wallet Successful!',
+          detail: data.message,
+          life: 3000,
+        })
+
         getSingleWallet(slode)
       }
     }
@@ -220,7 +237,7 @@ export const useWalletStore = defineStore('wallet', () => {
     show: false,
   })
   /**
-   * The function of the all wallet action.
+   * The function of the update wallet action.
    *
    * @returns {Promise<void>}
    */
@@ -233,6 +250,13 @@ export const useWalletStore = defineStore('wallet', () => {
       const { data, status } = await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
 
       if (status === 200 && data.data) {
+        toast.add({
+          severity: 'info',
+          summary: 'Update Wallet Successful!',
+          detail: data.message,
+          life: 3000,
+        })
+
         const { slug, code } = data.data[0]
 
         getSingleWallet(`${slug}_${code}`)

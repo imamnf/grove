@@ -7,15 +7,9 @@ const isEditing = ref(false)
   <div class="grid grid-cols-12 gap-x-8">
     <ViewsMenuAdd v-if="!isEditing" />
 
-    <ViewsMenuEdit
-      v-else
-      @update:is-editing="isEditing = $event"
-    />
+    <ViewsMenuEdit v-else @update:is-editing="isEditing = $event" />
 
-    <ViewsMenuList
-      :is-editing
-      @update:is-editing="isEditing = $event"
-    />
+    <ViewsMenuList :is-editing @update:is-editing="isEditing = $event" />
   </div>
 </template>
 

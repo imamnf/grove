@@ -1,5 +1,15 @@
 /* eslint-disable unused-imports/no-unused-vars */
-import type { AddResponse, AddState, TransactionPayload, TransactionsResponse, TransactionsState, TransactionTypesResponse, TransactionTypesState } from '@tpStr/transaction.types'
+import type {
+  AddResponse,
+  AddState,
+  DeleteResponse,
+  DeleteState,
+  TransactionPayload,
+  TransactionsResponse,
+  TransactionsState,
+  TransactionTypesResponse,
+  TransactionTypesState,
+} from '@tpStr/transaction.types'
 
 export const useTransactionStore = defineStore('transaction', () => {
   /**
@@ -141,6 +151,53 @@ export const useTransactionStore = defineStore('transaction', () => {
       addState.show = true
     }
   }
+  /****************************
+   *                          *
+   * -> Delete Transaction <- *
+   *                          *
+   ****************************/
+  /**
+   * The state of the delete transaction store.
+   *
+   * @property {boolean} error - The error state of the store.
+   * @property {boolean} loading - The loading state of the store.
+   * @property {boolean} show - The show state of the store.
+   */
+  const deleteState = reactive<DeleteState>({
+    error: false,
+    loading: false,
+    show: false,
+  })
+  /**
+   * The function to delete transaction.
+   *
+   * @param {string} slode - Slode
+   * @returns {Promise<{status: number}>}
+   */
+  async function deleteTransaction(slode: string): Promise<{ status: number }> {
+    deleteState.loading = true
+    deleteState.error = false
+    deleteState.show = false
+
+    try {
+      const { status } = await $api<DeleteResponse>(`${url}/${slode}`, { method: 'DELETE' })
+
+      return {
+        status,
+      }
+    }
+    catch (error: any) {
+      deleteState.error = true
+
+      return {
+        status: 500,
+      }
+    }
+    finally {
+      deleteState.loading = false
+      deleteState.show = true
+    }
+  }
   /**********************************
    *                                *
    * -> Get All Transaction Type <- *
@@ -197,6 +254,9 @@ export const useTransactionStore = defineStore('transaction', () => {
     // Add Transaction
     addState,
     addTransaction,
+    // Delete Transaction
+    deleteState,
+    deleteTransaction,
     // Get All Transaction Type
     typeState,
     getAllTransactionType,

@@ -13,8 +13,9 @@ const transactionStore = useTransactionStore()
 const filters = ref({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } })
 // Action
 const { formatCurr } = useCurrency()
-type TransactionType = 'revenue' | 'expense' | 'transfer'
+const { dateLong } = useDate()
 
+type TransactionType = 'revenue' | 'expense' | 'transfer'
 function checkSeverity(type: TransactionType): string {
   const severityMap: Record<TransactionType, string> = {
     revenue: 'success',
@@ -28,13 +29,13 @@ onBeforeMount(() => {
   transactionStore.getAllTransaction()
 })
 /**
- * Update Doalog
+ * Detail Dialog
  */
 // State
-const isOpenUpdate = ref(false)
+const isOpenDetail = ref(false)
 // Action
-async function openUpdateDialog(slode: string) {
-  isOpenUpdate.value = true
+async function openDetailDialog(slode: string) {
+  isOpenDetail.value = true
 
   await transactionStore.getSingleTransaction(slode)
 }
@@ -99,11 +100,15 @@ async function openUpdateDialog(slode: string) {
         </template>
       </Column>
 
-      <Column field="date" header="Date" sortable style="width: 25%" />
+      <Column field="date" header="Date" sortable style="width: 25%">
+        <template #body="{ data }: {data: Data}">
+          {{ dateLong(data.date) }}
+        </template>
+      </Column>
 
       <Column header="Action" style="width: 25%">
         <template #body="{ data }: {data: Data}">
-          <Button icon="pi pi-pencil" rounded @click="openUpdateDialog(`${data.slug}_${data.code}`)" />
+          <Button icon="pi pi-pencil" rounded @click="openDetailDialog(`${data.slug}_${data.code}`)" />
         </template>
       </Column>
 
@@ -115,5 +120,5 @@ async function openUpdateDialog(slode: string) {
     </DataTable>
   </div>
 
-  <ViewsTransactionDetail v-model="isOpenUpdate" />
+  <ViewsTransactionDetail v-model="isOpenDetail" />
 </template>

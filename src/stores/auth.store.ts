@@ -24,7 +24,6 @@ import { useMenuStore } from './menu.store'
 
 export const useAuthStore = defineStore('auth', () => {
   const toast = useToast()
-
   /**
    * The menu store instance.
    */
@@ -131,7 +130,12 @@ export const useAuthStore = defineStore('auth', () => {
       const { data, status } = await $api<SignInResponse>(`${url}/sign-in`, { method: 'POST', body: payload })
 
       if (status === 200) {
-        toast.add({ severity: 'success', summary: 'Success Message', detail: 'Message Content', life: 3000 })
+        toast.add({
+          severity: 'success',
+          summary: 'Sign in Successful!',
+          detail: data.message,
+          life: 3000,
+        })
 
         // Wait for toast to finish
         await new Promise(resolve => setTimeout(resolve, 3000))

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useWalletStore } from '@str/wallet.store'
 
+import { useConfirm } from 'primevue/useconfirm'
+import { capitalize } from 'vue'
 import { useRoute } from 'vue-router/auto'
 
 // Lazy Components
@@ -13,7 +15,7 @@ const slodeParams = route.params.slode
 const isEditWallet = ref(false)
 // Action
 const { checkStatus, checkType } = useWallet()
-const { formatCurr, formatCurrShort } = useCurrency()
+const { formatCurr } = useCurrency()
 
 type Transaction = 'revenue' | 'expense' | 'transfer'
 function checkTransaction(transaction: string) {
@@ -26,18 +28,39 @@ function checkTransaction(transaction: string) {
   return transactionMap[transaction as Transaction] ?? ['bg-fuchsia-100', 'dark:bg-fuchsia-400/10', 'text-fuchsia-500']
 }
 // Hooks
+provide('slode', slodeParams)
+
 onBeforeMount(() => {
   walletStore.getSingleWallet(slodeParams)
 })
 /**
- * Change Wallet Status
+ * Change Wallet Status Dialog
  */
-function onChangeWalletStatus(status: boolean) {
+// State
+const confirm = useConfirm()
+// Action
+function openChangeWalletDialog(status: boolean) {
   const payload = {
     status,
   }
 
-  walletStore.updateWalletStatus(payload, slodeParams)
+  confirm.require({
+    message: `Are you sure you want to ${status ? 'Activate' : 'Deactivate'}?`,
+    header: 'Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      text: true,
+    },
+    acceptProps: {
+      label: 'Confirm',
+      severity: `${status ? 'success' : 'danger'}`,
+    },
+    accept: () => {
+      walletStore.updateWalletStatus(payload, slodeParams)
+    },
+  })
 }
 </script>
 
@@ -54,7 +77,8 @@ function onChangeWalletStatus(status: boolean) {
 
               <h3
                 v-tooltip.top="!wallet.status && 'Activate the wallet before editing the wallet'"
-                class="text-surface-900 dark:text-surface-0 font-medium text-2xl cursor-pointer hover:underline"
+                class="text-surface-900 dark:text-surface-0 font-medium text-2xl hover:underline"
+                :class="wallet.status ? 'cursor-pointer' : 'cursor-not-allowed'"
                 @click="wallet.status && (isEditWallet = true)"
               >
                 {{ wallet.name }}
@@ -65,7 +89,7 @@ function onChangeWalletStatus(status: boolean) {
               v-tooltip.top="wallet.status ? 'Active' : 'Inactive'"
               class="flex items-center justify-center rounded-border size-10 cursor-pointer"
               :class="[checkStatus(wallet.status, wallet.balance)[0], checkStatus(wallet.status, wallet.balance)[1]]"
-              @click="onChangeWalletStatus(!wallet.status)"
+              @click="openChangeWalletDialog(!wallet.status)"
             >
               <i
                 class="!text-xl"
@@ -85,10 +109,9 @@ function onChangeWalletStatus(status: boolean) {
               </span>
 
               <h3
-                v-tooltip.top="formatCurr(wallet.balance)"
                 class="text-surface-900 dark:text-surface-0 font-medium text-2xl"
               >
-                {{ formatCurrShort(wallet.balance) }}
+                {{ formatCurr(wallet.balance) }}
               </h3>
             </div>
 
@@ -111,6 +134,7 @@ function onChangeWalletStatus(status: boolean) {
                 <div
                   v-for="(value, key) in wallet.transaction"
                   :key
+                  v-tooltip.top="capitalize(key)"
                   class="flex items-center gap-x-2"
                 >
                   <div

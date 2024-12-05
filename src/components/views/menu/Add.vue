@@ -72,7 +72,12 @@ const onSubmit = handleSubmit(async (values) => {
             />
           </IconField>
 
-          <Message v-if="errors.name" severity="error" size="small" variant="simple">
+          <Message
+            v-if="errors.name"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ errors.name }}
           </Message>
         </div>
@@ -92,7 +97,12 @@ const onSubmit = handleSubmit(async (values) => {
             />
           </InputGroup>
 
-          <Message v-if="errors.to" severity="error" size="small" variant="simple">
+          <Message
+            v-if="errors.to"
+            severity="error"
+            size="small"
+            variant="simple"
+          >
             {{ errors.to }}
           </Message>
         </div>
@@ -114,7 +124,12 @@ const onSubmit = handleSubmit(async (values) => {
                 />
               </IconField>
 
-              <Message v-if="errors.icon" severity="error" size="small" variant="simple">
+              <Message
+                v-if="errors.icon"
+                severity="error"
+                size="small"
+                variant="simple"
+              >
                 {{ errors.icon }}
               </Message>
 

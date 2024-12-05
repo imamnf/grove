@@ -3,16 +3,19 @@ import type { WalletTransactionData } from '@tpStr/wallet.types'
 
 import { FilterMatchMode } from '@primevue/core/api'
 
+import { useTransactionStore } from '@str/transaction.store'
 import { useWalletStore } from '@str/wallet.store'
 
 // Props
 const props = defineProps<{ slode: string }>()
 // Store
+const transactionStore = useTransactionStore()
 const walletStore = useWalletStore()
 // State
 const filters = ref({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } })
 // Action
 const { formatCurr } = useCurrency()
+const { dateLong } = useDate()
 
 type TransactionType = 'revenue' | 'expense' | 'transfer'
 function checkSeverity(type: TransactionType): string {
@@ -27,6 +30,17 @@ function checkSeverity(type: TransactionType): string {
 onBeforeMount(() => {
   walletStore.getAllWalletTransaction(props.slode)
 })
+/**
+ * Detail Dialog
+ */
+// State
+const isOpenDetail = ref(false)
+// Action
+async function openDetailDialog(slode: string) {
+  isOpenDetail.value = true
+
+  await transactionStore.getSingleTransaction(slode)
+}
 </script>
 
 <template>
@@ -65,9 +79,24 @@ onBeforeMount(() => {
           {{ formatCurr(data.amount) }}
         </template>
       </Column>
+
+      <Column field="date" header="Date" sortable style="width: 25%">
+        <template #body="{ data }: {data: WalletTransactionData}">
+          {{ dateLong(data.date) }}
+        </template>
+      </Column>
+
+      <Column header="Action" style="width: 25%">
+        <template #body="{ data }: {data: WalletTransactionData}">
+          <Button icon="pi pi-pencil" rounded @click="openDetailDialog(`${data.slug}_${data.code}`)" />
+        </template>
+      </Column>
+
       <template #empty>
         No customers found.
       </template>
     </DataTable>
   </div>
+
+  <ViewsTransactionDetail v-model="isOpenDetail" />
 </template>

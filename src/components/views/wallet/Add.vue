@@ -123,15 +123,15 @@ const onSubmit = handleSubmit(async (values) => {
         </Message>
       </div>
 
-      <Button
-        type="submit"
-        class="self-end"
-        icon="pi pi-plus"
-        rounded
-        :label="walletStore.addState.loading ? 'Adding...' : 'Add wallet'"
-        :loading="walletStore.addState.loading"
-        :disabled="walletStore.addState.loading"
-      />
+      <div class="flex justify-end">
+        <Button
+          type="submit"
+          icon="pi pi-plus"
+          :label="walletStore.addState.loading ? 'Adding...' : 'Add wallet'"
+          :loading="walletStore.addState.loading"
+          :disabled="walletStore.addState.loading"
+        />
+      </div>
     </form>
   </Dialog>
 </template>

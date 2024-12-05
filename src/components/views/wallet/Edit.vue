@@ -106,20 +106,25 @@ watch(
           />
         </IconField>
 
-        <Message v-if="errors.name" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.name"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.name }}
         </Message>
       </div>
 
-      <Button
-        type="submit"
-        class="self-end"
-        icon="pi pi-pencil"
-        rounded
-        :label="walletStore.updateState.loading ? 'Updating...' : 'Update wallet'"
-        :loading="walletStore.updateState.loading"
-        :disabled="walletStore.updateState.loading"
-      />
+      <div class="flex justify-end">
+        <Button
+          type="submit"
+          icon="pi pi-pencil"
+          :label="walletStore.updateState.loading ? 'Updating...' : 'Update wallet'"
+          :loading="walletStore.updateState.loading"
+          :disabled="walletStore.updateState.loading"
+        />
+      </div>
     </form>
   </Dialog>
 </template>

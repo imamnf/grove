@@ -4,21 +4,24 @@ import type { Response, State } from '@tp/index.types'
  * Data of a dashboard
  *
  */
+interface Balance {
+  total: number
+  revenue: number
+  expense: number
+}
+interface Wallet {
+  active: number
+  inactive: number
+}
+interface Transaction {
+  revenue: number
+  expense: number
+  transfer: number
+}
 interface Data {
-  balance: {
-    total: number
-    revenue: number
-    expense: number
-  }
-  wallet: {
-    active: number
-    inactive: number
-  }
-  transaction: {
-    revenue: number
-    expense: number
-    transfer: number
-  }
+  balance: Balance
+  wallet: Wallet
+  transaction: Transaction
 }
 /**
  * The state of the dashboard store.
@@ -31,7 +34,7 @@ interface DashboardState extends State<Data> { }
 /**
  * The response of the menu store.
  *
- * @property {Data[]} data - The data of the response.
+ * @property {Data} data - The data of the response.
  * @property {string} message - The message of the response.
  */
 interface DashboardResponse extends Response<Data> { }

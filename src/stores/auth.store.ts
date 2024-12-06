@@ -28,7 +28,6 @@ export const useAuthStore = defineStore('auth', () => {
    * The menu store instance.
    */
   const menuStore = useMenuStore()
-
   /**
    * The base URL for all API requests.
    *
@@ -41,13 +40,11 @@ export const useAuthStore = defineStore('auth', () => {
    * @type {Router}
    */
   const router: Router = useRouter()
-
   /*****************
    *               *
    * -> Sign Up <- *
    *               *
    ****************/
-
   /**
    * The sign up state of the auth store.
    *
@@ -61,7 +58,6 @@ export const useAuthStore = defineStore('auth', () => {
     loading: false,
     show: false,
   })
-
   /**
    * The function of the sign up action.
    *
@@ -74,7 +70,10 @@ export const useAuthStore = defineStore('auth', () => {
     signUpState.show = false
 
     try {
-      const { status } = await $api<SignUpResponse>(`${url}/sign-up`, { method: 'POST', body: payload })
+      const { status } = await $api<SignUpResponse>(
+        `${url}/sign-up`,
+        { method: 'POST', body: payload },
+      )
 
       if (status === 200) {
         signUpState.show = true
@@ -87,13 +86,11 @@ export const useAuthStore = defineStore('auth', () => {
       signUpState.loading = false
     }
   }
-
   /*****************
    *               *
    * -> Sign In <- *
    *               *
    ****************/
-
   /**
    * The sign in state of the auth store.
    *
@@ -113,8 +110,7 @@ export const useAuthStore = defineStore('auth', () => {
       write: (v: SignInData['user']) => JSON.stringify(v),
     },
   })
-  const accessToken = useSessionStorage<string | null>('accessToken', null)
-
+  const accessToken = useSessionStorage<SignInData['token']['accessToken'] | null>('accessToken', null)
   /**
    * The function of the sign in action.
    *
@@ -127,7 +123,10 @@ export const useAuthStore = defineStore('auth', () => {
     signInState.show = false
 
     try {
-      const { data, status } = await $api<SignInResponse>(`${url}/sign-in`, { method: 'POST', body: payload })
+      const { data, status } = await $api<SignInResponse>(
+        `${url}/sign-in`,
+        { method: 'POST', body: payload },
+      )
 
       if (status === 200) {
         toast.add({
@@ -160,7 +159,6 @@ export const useAuthStore = defineStore('auth', () => {
    * -> Sign Out <- *
    *               *
    *****************/
-
   /**
    * The function of the sign in action.
    *
@@ -172,7 +170,6 @@ export const useAuthStore = defineStore('auth', () => {
     loading: false,
     show: false,
   })
-
   /**
    * The function of the sign out action.
    *
@@ -185,7 +182,10 @@ export const useAuthStore = defineStore('auth', () => {
     signOutState.show = false
 
     try {
-      const { status } = await $api<SignOutResponse>(`${url}/sign-out`, { method: 'DELETE', body: payload })
+      const { status } = await $api<SignOutResponse>(
+        `${url}/sign-out`,
+        { method: 'DELETE', body: payload },
+      )
 
       if (status === 200) {
         signOutState.show = true
@@ -198,7 +198,6 @@ export const useAuthStore = defineStore('auth', () => {
       signOutState.loading = false
     }
   }
-
   /**
    *  Forget Password
    */
@@ -275,21 +274,17 @@ export const useAuthStore = defineStore('auth', () => {
     // Sign Up
     signUpState,
     signUp,
-
     // Sign In
     signInState,
     user,
     accessToken,
     signIn,
-
     // Sign Out
     signOutState,
     signOut,
-
     // Forget Password
     forgetState,
     forgetPassword,
-
     // Reset Password
     resetState,
     resetPassword,

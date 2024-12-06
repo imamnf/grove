@@ -49,7 +49,10 @@ export const useTransactionStore = defineStore('transaction', () => {
     state.show = false
 
     try {
-      const { data, status } = await $api<TransactionsResponse>(url, { method: 'POST' })
+      const { data, status } = await $api<TransactionsResponse>(
+        url,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         state.data = data.data
@@ -94,7 +97,10 @@ export const useTransactionStore = defineStore('transaction', () => {
     transactionState.show = false
 
     try {
-      const { data, status } = await $api<TransactionsResponse>(`${url}/${slode}`, { method: 'GET' })
+      const { data, status } = await $api<TransactionsResponse>(
+        `${url}/${slode}`,
+        { method: 'GET' },
+      )
 
       if (status === 200) {
         transactionState.data = data.data
@@ -137,7 +143,10 @@ export const useTransactionStore = defineStore('transaction', () => {
     addState.show = false
 
     try {
-      const { status } = await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload })
+      const { status } = await $api<AddResponse>(
+        `${url}/add`,
+        { method: 'POST', body: payload },
+      )
 
       if (status === 201) {
         getAllTransaction()
@@ -172,15 +181,17 @@ export const useTransactionStore = defineStore('transaction', () => {
    * The function to delete transaction.
    *
    * @param {string} slode - Slode
-   * @returns {Promise<{status: number}>}
    */
-  async function deleteTransaction(slode: string): Promise<{ status: number }> {
+  async function deleteTransaction(slode: string) {
     deleteState.loading = true
     deleteState.error = false
     deleteState.show = false
 
     try {
-      const { status } = await $api<DeleteResponse>(`${url}/${slode}`, { method: 'DELETE' })
+      const { status } = await $api<DeleteResponse>(
+        `${url}/${slode}`,
+        { method: 'DELETE' },
+      )
 
       return {
         status,
@@ -229,7 +240,10 @@ export const useTransactionStore = defineStore('transaction', () => {
     typeState.show = false
 
     try {
-      const { data, status } = await $api<TransactionTypesResponse>(`${url}/types`, { method: 'POST' })
+      const { data, status } = await $api<TransactionTypesResponse>(
+        `${url}/types`,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         typeState.data = data.data

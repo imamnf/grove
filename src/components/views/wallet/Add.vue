@@ -11,9 +11,7 @@ const walletStore = useWalletStore()
 // State
 const id = useId()
 // Hooks
-onMounted(() => {
-  walletStore.getAllWalletType()
-})
+onMounted(() => walletStore.getAllWalletType())
 /********
  * Form *
  ********/

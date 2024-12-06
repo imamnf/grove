@@ -51,8 +51,8 @@ onBeforeMount(async () => {
       categoryStore.getAllCategory(),
     ])
   }
-  catch (error) {
-    console.error('Failed to load initial data:', error)
+  catch (e) {
+    console.error('Failed to load initial data:', e)
     // Handle error appropriately (show error message, etc)
   }
 })
@@ -71,7 +71,13 @@ const schema = z.object({
 })
 type Schema = z.infer<typeof schema>
 // Validation
-const { errors, handleSubmit, resetForm, values, setFieldValue } = useForm({ validationSchema: toTypedSchema(schema) })
+const {
+  errors,
+  handleSubmit,
+  resetForm,
+  values,
+  setFieldValue,
+} = useForm({ validationSchema: toTypedSchema(schema) })
 // Model
 const { value: Wallet } = useField<Schema['wallet']>('wallet')
 const { value: Name } = useField<Schema['name']>('name')
@@ -93,8 +99,8 @@ const onSubmit = handleSubmit(async (values) => {
   await transactionStore.addTransaction(payload)
 
   if (transactionStore.addState.show) {
-    resetForm()
     visible.value = false
+    resetForm()
   }
 })
 // Hooks
@@ -138,7 +144,12 @@ watch(() => values.wallet, async (newValue) => {
           :options="walletStore.activeWallet"
         />
 
-        <Message v-if="errors.wallet" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.wallet"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.wallet }}
         </Message>
       </div>
@@ -159,7 +170,12 @@ watch(() => values.wallet, async (newValue) => {
           />
         </IconField>
 
-        <Message v-if="errors.name" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.name"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.name }}
         </Message>
       </div>
@@ -183,7 +199,12 @@ watch(() => values.wallet, async (newValue) => {
           </template>
         </SelectButton>
 
-        <Message v-if="errors.type" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.type"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.type }}
         </Message>
       </div>
@@ -225,7 +246,12 @@ watch(() => values.wallet, async (newValue) => {
           />
         </IconField>
 
-        <Message v-if="errors.amount" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.amount"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.amount }}
         </Message>
       </div>
@@ -244,7 +270,12 @@ watch(() => values.wallet, async (newValue) => {
           :options="categoryStore.state.data"
         />
 
-        <Message v-if="errors.category" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.category"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.category }}
         </Message>
       </div>
@@ -260,7 +291,12 @@ watch(() => values.wallet, async (newValue) => {
           :invalid="!!errors.description"
         />
 
-        <Message v-if="errors.description" severity="error" size="small" variant="simple">
+        <Message
+          v-if="errors.description"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ errors.description }}
         </Message>
       </div>

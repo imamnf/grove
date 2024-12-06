@@ -4,15 +4,15 @@ import { capitalize } from 'vue'
 
 // Store
 const dashboardStore = useDashboardStore()
+// State
+const severity: Record<string, 'success' | 'danger'> = {
+  active: 'success',
+  inactive: 'danger',
+}
+const checkSeverity = useSeverity(severity)
 // Action
-type WalletType = 'active' | 'inactive'
-function getWalletSeverity(type: string) {
-  const walletMap: Record<WalletType, string[]> = {
-    active: ['bg-emerald-100', 'text-emerald-500', 'pi-play'],
-    inactive: ['bg-rose-100', 'text-rose-500', 'pi-pause'],
-  }
-
-  return walletMap[type as WalletType] ?? []
+function checkIcon(status: 'active' | 'inactive') {
+  return status === 'active' ? 'pi-play' : 'pi-pause'
 }
 </script>
 
@@ -26,18 +26,18 @@ function getWalletSeverity(type: string) {
           </h3>
           <div class="flex items-center gap-x-8 mt-8">
             <div
-              v-for="(value, key) in dashboardStore.dashboard.wallet"
+              v-for="(value, key) in dashboardStore.dashboard?.wallet"
               :key
               v-tooltip.top="capitalize(key)"
               class="flex items-center gap-x-2"
             >
               <div
                 class="flex items-center justify-center rounded-border size-8"
-                :class="[getWalletSeverity(key)[0]]"
+                :class="checkSeverity[key][0]"
               >
                 <i
                   class="pi !text-xl"
-                  :class="[getWalletSeverity(key)[1], getWalletSeverity(key)[2]]"
+                  :class="[checkSeverity[key][1], checkIcon(key)]"
                 />
               </div>
               <h3 class="text-surface-900 dark:text-surface-0 font-medium text-2xl">

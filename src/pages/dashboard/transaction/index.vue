@@ -1,13 +1,18 @@
 <script setup lang="ts">
-// Add Transaction
+// Component
+const LazyViesTransactionAdd = defineAsyncComponent(() => import('@views/transaction/Add.vue'))
+const LazyViesTransactionList = defineAsyncComponent(() => import('@views/transaction/List.vue'))
+/**
+ * Add Transaction
+ */
 // State
 const isAddTransaction = ref(false)
 </script>
 
 <template>
-  <ViewsTransactionList @update:is-add-transaction="isAddTransaction = $event" />
+  <LazyViesTransactionList @update:is-add-transaction="isAddTransaction = $event" />
 
-  <ViewsTransactionAdd v-model="isAddTransaction" />
+  <LazyViesTransactionAdd v-model="isAddTransaction" />
 </template>
 
 <route lang="json">

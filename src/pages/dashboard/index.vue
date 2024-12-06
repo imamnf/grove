@@ -4,9 +4,7 @@ import { useDashboardStore } from '@str/dashboard.store'
 // Store
 const dashboardStore = useDashboardStore()
 // Hooks
-onBeforeMount(() => {
-  dashboardStore.getDashboard()
-})
+onBeforeMount(() => dashboardStore.getDashboard())
 </script>
 
 <template>

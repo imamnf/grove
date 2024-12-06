@@ -25,9 +25,7 @@ function checkSeverity(type: TransactionType): string {
   return severityMap[type.toLowerCase() as TransactionType] ?? 'secondary'
 }
 // Hooks
-onBeforeMount(() => {
-  transactionStore.getAllTransaction()
-})
+onBeforeMount(() => transactionStore.getAllTransaction())
 /**
  * Detail Dialog
  */
@@ -37,7 +35,7 @@ const isOpenDetail = ref(false)
 async function openDetailDialog(slode: string) {
   isOpenDetail.value = true
 
-  await transactionStore.getSingleTransaction(slode)
+  transactionStore.getSingleTransaction(slode)
 }
 </script>
 

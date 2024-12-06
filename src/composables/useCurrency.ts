@@ -10,7 +10,7 @@ export function useCurrency(currencyCode: string = 'USD', locale: string = 'en-U
 
   function formatCurrShort(number: number) {
     if (number <= 0) {
-      return 0 // Or handle negative numbers as needed
+      return 0
     }
 
     const suffixes = ['K', 'M', 'B', 'T']

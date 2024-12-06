@@ -11,28 +11,25 @@ const id = useId()
 /********
  * Form *
  ********/
-/**
- * Schema
- */
+// Schema
 const schema = z.object({
   name: z.string({ required_error: 'Name is required' }),
   to: z.string({ required_error: 'Redirect is required' }),
   icon: z.string({ required_error: 'Icon is required' }),
 })
 type Schema = z.infer<typeof schema>
-/**
- * Validation
- */
-const { errors, handleSubmit, resetForm, values } = useForm({ validationSchema: toTypedSchema(schema) })
-/**
- * Model
- */
+// Validation
+const {
+  errors,
+  handleSubmit,
+  resetForm,
+  values,
+} = useForm({ validationSchema: toTypedSchema(schema) })
+// Model
 const { value: Name } = useField<Schema['name']>('name')
 const { value: Redirect } = useField<Schema['to']>('to')
 const { value: Icon } = useField<Schema['icon']>('icon')
-/**
- * Action
- */
+// Action
 const onSubmit = handleSubmit(async (values) => {
   const payload = {
     name: values.name,
@@ -133,7 +130,11 @@ const onSubmit = handleSubmit(async (values) => {
                 {{ errors.icon }}
               </Message>
 
-              <Message severity="secondary" size="small" variant="simple">
+              <Message
+                severity="secondary"
+                size="small"
+                variant="simple"
+              >
                 Check icon here:
                 <a
                   href="https://primevue.org/icons/"

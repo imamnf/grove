@@ -7,7 +7,9 @@ const props = defineProps<{
   isEditing: boolean
 }>()
 // Emits
-const emits = defineEmits<{ (e: 'update:isEditing', value: boolean): void }>()
+const emits = defineEmits<{
+  (e: 'update:isEditing', value: boolean): void
+}>()
 // Store
 const menuStore = useMenuStore()
 // State

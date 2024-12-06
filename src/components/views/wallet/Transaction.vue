@@ -27,9 +27,7 @@ function checkSeverity(type: TransactionType): string {
   return severityMap[type.toLowerCase() as TransactionType] ?? 'secondary'
 }
 // Hooks
-onBeforeMount(() => {
-  walletStore.getAllWalletTransaction(props.slode)
-})
+onBeforeMount(() => walletStore.getAllWalletTransaction(props.slode))
 /**
  * Detail Dialog
  */

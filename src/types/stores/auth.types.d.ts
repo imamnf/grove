@@ -48,6 +48,7 @@ interface SignInData {
     first_name: string
     last_name: string
     phone: string
+    role: 'admin' | 'user'
   }[]
   token: {
     accessToken: string

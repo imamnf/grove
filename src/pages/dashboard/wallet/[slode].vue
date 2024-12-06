@@ -7,32 +7,36 @@ import { useRoute } from 'vue-router/auto'
 
 // Lazy Components
 const LazyViewsWalletEdit = defineAsyncComponent(() => import('@views/wallet/Edit.vue'))
+const LazyViewsWalletTransaction = defineAsyncComponent(() => import('@views/wallet/Transaction.vue'))
 // Store
 const walletStore = useWalletStore()
 // State
 const route = useRoute('dashboard-wallet-slode')
 const slodeParams = route.params.slode
 const isEditWallet = ref(false)
+const severity: Record<string, 'success' | 'danger' | 'info'> = {
+  revenue: 'success',
+  expense: 'danger',
+  transfer: 'info',
+}
+const checkSeverity = useSeverity(severity)
 // Action
 const { checkStatus, checkType } = useWallet()
 const { formatCurr } = useCurrency()
 
-type Transaction = 'revenue' | 'expense' | 'transfer'
-function checkTransaction(transaction: string) {
-  const transactionMap: Record<Transaction, string[]> = {
-    revenue: ['bg-emerald-100', 'dark:bg-emerald-400/10', 'text-emerald-500', 'pi-arrow-up'],
-    expense: ['bg-rose-100', 'dark:bg-rose-400/10', 'text-rose-500', 'pi-arrow-down'],
-    transfer: ['bg-sky-100', 'dark:bg-sky-400/10', 'text-sky-500', 'pi-arrows-v'],
+type TransactionType = 'revenue' | 'expense' | 'transfer'
+function checkIcon(type: string) {
+  const iconMap: Record<TransactionType, string> = {
+    revenue: 'pi-arrow-up',
+    expense: 'pi-arrow-down',
+    transfer: 'pi-arrows-v',
   }
 
-  return transactionMap[transaction as Transaction] ?? ['bg-fuchsia-100', 'dark:bg-fuchsia-400/10', 'text-fuchsia-500']
+  return iconMap[type as TransactionType] ?? []
 }
 // Hooks
 provide('slode', slodeParams)
-
-onBeforeMount(() => {
-  walletStore.getSingleWallet(slodeParams)
-})
+onBeforeMount(() => walletStore.getSingleWallet(slodeParams))
 /**
  * Change Wallet Status Dialog
  */
@@ -57,9 +61,7 @@ function openChangeWalletDialog(status: boolean) {
       label: 'Confirm',
       severity: `${status ? 'success' : 'danger'}`,
     },
-    accept: () => {
-      walletStore.updateWalletStatus(payload, slodeParams)
-    },
+    accept: () => walletStore.updateWalletStatus(payload, slodeParams),
   })
 }
 </script>
@@ -139,11 +141,11 @@ function openChangeWalletDialog(status: boolean) {
                 >
                   <div
                     class="flex items-center justify-center rounded-border size-8 "
-                    :class="[checkTransaction(key)?.[0], checkTransaction(key)?.[1]]"
+                    :class="checkSeverity[key][0]"
                   >
                     <i
                       class="pi !text-xl"
-                      :class="[checkTransaction(key)?.[2], checkTransaction(key)?.[3]]"
+                      :class="[checkSeverity[key][1], checkIcon(key)]"
                     />
                   </div>
 
@@ -163,7 +165,7 @@ function openChangeWalletDialog(status: boolean) {
     </template>
 
     <div class="col-span-12">
-      <ViewsWalletTransaction :slode="slodeParams" />
+      <LazyViewsWalletTransaction :slode="slodeParams" />
     </div>
   </div>
 
@@ -174,7 +176,7 @@ function openChangeWalletDialog(status: boolean) {
 {
   "meta": {
     "layout": "AppLayoutDashboard",
-    "title": "Wallet"
+    "title": "Detail Wallet"
   }
 }
 </route>

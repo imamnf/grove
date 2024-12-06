@@ -61,7 +61,10 @@ export const useWalletStore = defineStore('wallet', () => {
     state.show = false
 
     try {
-      const { data, status } = await $api<WalletsResponse>(url, { method: 'POST' })
+      const { data, status } = await $api<WalletsResponse>(
+        url,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         state.data = data.data
@@ -107,7 +110,10 @@ export const useWalletStore = defineStore('wallet', () => {
     walletState.show = false
 
     try {
-      const { data, status } = await $api<WalletResponse>(`${url}/${slode}`, { method: 'GET' })
+      const { data, status } = await $api<WalletResponse>(
+        `${url}/${slode}`,
+        { method: 'GET' },
+      )
 
       if (status === 200) {
         walletState.data = data.data
@@ -149,7 +155,10 @@ export const useWalletStore = defineStore('wallet', () => {
     addState.show = false
 
     try {
-      const { data, status } = await $api<AddResponse>(`${url}/add`, { method: 'POST', body: payload })
+      const { data, status } = await $api<AddResponse>(
+        `${url}/add`,
+        { method: 'POST', body: payload },
+      )
 
       if (status === 201) {
         toast.add({
@@ -198,7 +207,10 @@ export const useWalletStore = defineStore('wallet', () => {
     statusState.show = false
 
     try {
-      const { data, status } = await $api<StatusResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+      const { data, status } = await $api<StatusResponse>(
+        `${url}/${slode}`,
+        { method: 'PATCH', body: payload },
+      )
 
       if (status === 200) {
         toast.add({
@@ -247,7 +259,10 @@ export const useWalletStore = defineStore('wallet', () => {
     updateState.show = false
 
     try {
-      const { data, status } = await $api<UpdateResponse>(`${url}/${slode}`, { method: 'PATCH', body: payload })
+      const { data, status } = await $api<UpdateResponse>(
+        `${url}/${slode}`,
+        { method: 'PATCH', body: payload },
+      )
 
       if (status === 200 && data.data) {
         toast.add({
@@ -301,7 +316,10 @@ export const useWalletStore = defineStore('wallet', () => {
     typeState.show = false
 
     try {
-      const { data, status } = await $api<WalletTypesResponse>(`${url}/types`, { method: 'POST' })
+      const { data, status } = await $api<WalletTypesResponse>(
+        `${url}/types`,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         typeState.data = data.data
@@ -346,7 +364,10 @@ export const useWalletStore = defineStore('wallet', () => {
     transactionState.show = false
 
     try {
-      const { data, status } = await $api<WalletTransactionsResponse>(`${url}/${slode}/transactions`, { method: 'POST' })
+      const { data, status } = await $api<WalletTransactionsResponse>(
+        `${url}/${slode}/transactions`,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         transactionState.data = data.data

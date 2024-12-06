@@ -30,7 +30,6 @@ export default defineConfig({
     Vue(),
     Components({
       dirs: ['src/components', 'src/layouts'],
-      dts: true,
       directoryAsNamespace: true,
       collapseSamePrefixes: true,
       resolvers: [

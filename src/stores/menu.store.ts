@@ -78,7 +78,10 @@ export const useMenuStore = defineStore('menu', () => {
     state.show = false
 
     try {
-      const { status, data } = await $api<MenusResponse>(url, { method: 'POST' })
+      const { status, data } = await $api<MenusResponse>(
+        url,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         menu.value = data.data
@@ -126,7 +129,10 @@ export const useMenuStore = defineStore('menu', () => {
     menuState.show = false
 
     try {
-      const { data, status } = await $api<MenuResponse>(`${url}/${slug}`, { method: 'GET' })
+      const { data, status } = await $api<MenuResponse>(
+        `${url}/${slug}`,
+        { method: 'GET' },
+      )
 
       if (status === 200) {
         menuState.data = data.data
@@ -159,10 +165,10 @@ export const useMenuStore = defineStore('menu', () => {
     addState.show = false
 
     try {
-      const { data, status } = await $api<AddResponse>(`${url}/add`, {
-        method: 'POST',
-        body: payload,
-      })
+      const { data, status } = await $api<AddResponse>(
+        `${url}/add`,
+        { method: 'POST', body: payload },
+      )
 
       if (status === 201) {
         toast.add({
@@ -202,10 +208,10 @@ export const useMenuStore = defineStore('menu', () => {
     updateState.show = false
 
     try {
-      const { data, status } = await $api<UpdateResponse>(`${url}/${slug}`, {
-        method: 'PATCH',
-        body: payload,
-      })
+      const { data, status } = await $api<UpdateResponse>(
+        `${url}/${slug}`,
+        { method: 'PATCH', body: payload },
+      )
 
       if (status === 200) {
         toast.add({
@@ -245,7 +251,10 @@ export const useMenuStore = defineStore('menu', () => {
     deleteState.show = false
 
     try {
-      const { data, status } = await $api<DeleteResponse>(`${url}/${slug}`, { method: 'DELETE' })
+      const { data, status } = await $api<DeleteResponse>(
+        `${url}/${slug}`,
+        { method: 'DELETE' },
+      )
 
       if (status === 200) {
         toast.add({

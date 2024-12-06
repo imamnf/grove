@@ -41,7 +41,10 @@ export const useDashboardStore = defineStore('dashboard', () => {
     state.show = false
 
     try {
-      const { status, data } = await $api<DashboardResponse>(url, { method: 'POST' })
+      const { status, data } = await $api<DashboardResponse>(
+        url,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         dashboard.value = data.data

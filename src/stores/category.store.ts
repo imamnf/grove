@@ -28,7 +28,10 @@ export const useCategoryStore = defineStore('category', () => {
     state.show = false
 
     try {
-      const { data, status } = await $api<CategoryResponse>(url, { method: 'POST' })
+      const { data, status } = await $api<CategoryResponse>(
+        url,
+        { method: 'POST' },
+      )
 
       if (status === 200) {
         state.data = data.data

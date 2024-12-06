@@ -6,7 +6,9 @@ import { useConfirm } from 'primevue/useconfirm'
 import { z } from 'zod'
 
 // Emits
-const emits = defineEmits<{ (e: 'update:isEditing', value: boolean): void }>()
+const emits = defineEmits<{
+  (e: 'update:isEditing', value: boolean): void
+}>()
 // Store
 const menuStore = useMenuStore()
 // State

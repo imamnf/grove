@@ -2,16 +2,14 @@
 import { useWalletStore } from '@str/wallet.store'
 
 // Lazy Components
-const ViewsWalletAdd = defineAsyncComponent(() => import('@views/wallet/Add.vue'))
+const LazyViewsWalletAdd = defineAsyncComponent(() => import('@views/wallet/Add.vue'))
 // Store
 const walletStore = useWalletStore()
 // Action
 const { checkStatus, checkType } = useWallet()
 const { formatCurr, formatCurrShort } = useCurrency()
 // Hooks
-onBeforeMount(() => {
-  walletStore.getAllWallet()
-})
+onBeforeMount(() => walletStore.getAllWallet())
 /**
  * Add Wallet
  */
@@ -75,7 +73,7 @@ const isAddWallet = ref(false)
     </div>
   </div>
 
-  <ViewsWalletAdd v-model="isAddWallet" />
+  <LazyViewsWalletAdd v-model="isAddWallet" />
 </template>
 
 <route lang="json">

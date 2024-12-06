@@ -55,16 +55,13 @@ const isAddWallet = ref(false)
           </div>
           <div
             class="flex items-center justify-center rounded-border size-10"
-            :class="[
-              checkStatus(wallet.status, wallet.balance)[0],
-              checkStatus(wallet.status, wallet.balance)[1],
-            ]"
+            :class="checkStatus(wallet.status, wallet.balance)[0]"
           >
             <i
               class="!text-xl"
               :class="[
                 checkType(wallet.type.slug),
-                checkStatus(wallet.status, wallet.balance)[2],
+                checkStatus(wallet.status, wallet.balance)[1],
               ]"
             />
           </div>
